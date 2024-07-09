@@ -12,6 +12,10 @@ import com.javaweb.model.response.StaffResponse;
 import com.javaweb.repository.IUserRepository;
 import com.javaweb.service.IBuildingService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.javaweb.converter.BuildingConverter;
@@ -30,8 +34,10 @@ public class BuildingService implements IBuildingService {
     private BuildingConverter buildingConverter;
 
     @Override
-    public List<BuildingSearchResponse> findAll(BuildingSearchRequest searchDTO) {
-        return buildingRepository.findAll(searchDTO).stream().map(i -> buildingConverter.EntityToSearchResponse(i)).toList();
+    public Page<BuildingSearchResponse> findAll(BuildingSearchRequest searchDTO) {
+        Page<BuildingEntity> results = buildingRepository.findAll(searchDTO, PageRequest.of(searchDTO.getPageNumber(), searchDTO.getPageSize()));
+        List<BuildingSearchResponse> responses = results.getContent().stream().map(buildingConverter::EntityToSearchResponse).toList();
+        return new PageImpl<>(responses, results.getPageable(), results.getTotalElements());
     }
 
     @Override

@@ -7,6 +7,23 @@ public class BuildingSearchRequest {
     private String name, ward, street, direction, managerPhone, managerName, district;
     private Integer numberOfBasements, areaTo, areaFrom, level, id_staff;
     private Double floorArea, rentPriceTo, rentPriceFrom;
+    private  Integer pageNumber = 0, pageSize = 2;
+
+    public Integer getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
+    }
+
+    public Integer getPageNumber() {
+        return pageNumber;
+    }
+
+    public void setPageNumber(Integer pageNumber) {
+        this.pageNumber = pageNumber;
+    }
 
     private List<String> typeCodes = new ArrayList<>();
 

@@ -8,6 +8,7 @@ import com.javaweb.service.IBuildingService;
 import com.javaweb.service.IUserService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -21,9 +22,8 @@ public class BuildingController {
     @Autowired
     private IUserService userService;
 
-//    @GetMapping("/admin/buildings")
     @GetMapping("/buildings")
-    public ModelAndView getList(@ModelAttribute("search") BuildingSearchRequest search, HttpServletRequest request){
+    public ModelAndView getList(@ModelAttribute("search") BuildingSearchRequest search){
         ModelAndView mav = new ModelAndView("admin/building/list");
         mav.addObject("result", buildingService.findAll(search));
         mav.addObject("staffs", userService.findAllStaff());
@@ -32,7 +32,6 @@ public class BuildingController {
         return mav;
     }
 
-//    @GetMapping(value = "/admin/buildings-edit")
     @GetMapping("/buildings-edit")
     public ModelAndView add(@ModelAttribute("building") BuildingDTO dto, HttpServletRequest request){
         ModelAndView mav = new ModelAndView("admin/building/edit");
@@ -41,7 +40,6 @@ public class BuildingController {
         return mav;
     }
 
-//    @GetMapping(value = "/admin/buildings-edit-{id}")
     @GetMapping("/buildings-edit-{id}")
     public ModelAndView edit(@PathVariable Integer id, HttpServletRequest request){
         ModelAndView mav = new ModelAndView("admin/building/edit");

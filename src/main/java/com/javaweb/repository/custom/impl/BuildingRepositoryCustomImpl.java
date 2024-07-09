@@ -5,6 +5,9 @@ import java.util.List;
 
 import com.javaweb.model.request.BuildingSearchRequest;
 import com.javaweb.utils.StringUtil;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import com.javaweb.repository.custom.BuildingRepositoryCustom;
@@ -21,8 +24,13 @@ public class BuildingRepositoryCustomImpl implements BuildingRepositoryCustom{
     private EntityManager entityManager;
 
     @Override
-    public List<BuildingEntity> findAll(BuildingSearchRequest searchDTO) {
-        return entityManager.createNativeQuery("SELECT DISTINCT * FROM building b " + getQuery(searchDTO), BuildingEntity.class).getResultList();
+    public Page<BuildingEntity> findAll(BuildingSearchRequest searchDTO, Pageable pageable) {
+        String baseQuery = "FROM building b " + getQuery(searchDTO);
+        Query query = entityManager.createNativeQuery("SELECT DISTINCT * " + baseQuery, BuildingEntity.class);
+        Query countQuery = entityManager.createNativeQuery("SELECT COUNT(DISTINCT b.id) " + baseQuery);
+        query.setFirstResult((int) pageable.getOffset());
+        query.setMaxResults(pageable.getPageSize());
+        return new PageImpl<>(query.getResultList(), pageable, ((Number) countQuery.getSingleResult()).longValue());
     }
 
     private StringBuilder getQuery(BuildingSearchRequest searchDTO) {
@@ -31,7 +39,7 @@ public class BuildingRepositoryCustomImpl implements BuildingRepositoryCustom{
             for(Field field : searchDTO.getClass().getDeclaredFields()) {
                 field.setAccessible(true);
                 Object value = field.get(searchDTO);
-                if(value == null || !StringUtil.checkString(value.toString())) continue;
+                if(value == null || !StringUtil.checkString(value.toString()) || field.getName().equals("pageNumber") || field.getName().equals("pageSize")) continue;
                 if(!field.getName().equals("id_staff") && !field.getName().equals("typeCodes") && !field.getName().startsWith("area") && !field.getName().startsWith("rentPrice")) {
                     if(!field.getName().equals("managerPhone") && NumberUtil.checkNumber(value.toString())) query.append(" AND b.").append(field.getName()).append(" = ").append(value);
                     else query.append(" AND b.").append(field.getName()).append(" LIKE '%").append(value).append("%'");

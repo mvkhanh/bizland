@@ -125,6 +125,8 @@
                                             <form:checkboxes path="typeCodes" items="${typecodes}"/>
                                         </div>
                                     </div>
+                                    <form:hidden path="pageNumber" id="pageNumber"/>
+                                    <form:hidden path="pageSize" id="pageSize"/>
                                     <div class="row">
                                         <div class="pull-right">
                                             <button type="button" class="btn btn-primary btn-xs" style="font-size: 16px; margin-right: 10px" id="btn-search">
@@ -188,7 +190,7 @@
                         </thead>
 
                         <tbody>
-                        <c:forEach var="building" items="${result}">
+                        <c:forEach var="building" items="${result.content}">
                             <tr data-id="${building.id}">
                                 <td class="center">
                                     <label class="pos-rel">
@@ -227,6 +229,27 @@
                         </c:forEach>
                         </tbody>
                     </table>
+                    <ul class="pagination pull-right">
+                        <c:if test="${result.totalPages >= 2}">
+                            <li class="${result.pageable.pageNumber == 0 ? 'disabled' : ''}">
+                                <a onclick="pagin(${result.pageable.pageNumber - 1})">
+                                    <i class="ace-icon fa fa-angle-double-left"></i>
+                                </a>
+                            </li>
+                        </c:if>
+                        <c:forEach begin="1" end="${result.totalPages}" var="page">
+                            <li class="${result.pageable.pageNumber == page - 1 ? 'active' : ''}">
+                                <a onclick="pagin(${page - 1})">${page}</a>
+                            </li>
+                        </c:forEach>
+                        <c:if test="${result.totalPages >= 2}">
+                            <li class="${result.pageable.pageNumber == result.totalPages - 1 ? 'disabled' : ''}">
+                                <a onclick="pagin(${result.pageable.pageNumber + 1})">
+                                    <i class="ace-icon fa fa-angle-double-right"></i>
+                                </a>
+                            </li>
+                        </c:if>
+                    </ul>
                 </div><!-- /.span -->
             </div>
         </div><!-- /.page-content -->
@@ -312,9 +335,13 @@
             }).get();
             if(data['staffIds'].length > 0) assignBuildingQuery(data);
         });
-
+        function pagin(pageNumber){
+            $('#pageNumber').val(pageNumber);
+            $('#listForm').submit();
+        }
         $('#btn-search').click(function (e){
             e.preventDefault();
+            $('#pageNumber').val(0);
             $('#listForm').submit();
         });
         function confirmDelete(ids){
