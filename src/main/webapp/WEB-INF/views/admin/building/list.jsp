@@ -375,8 +375,8 @@
                 datatype:"JSON",
                 success: function () {
                     console.log("Success");
-                    ids.forEach(id => $('#table tbody tr[data-id="' + id + '"]').remove());
-                    showSuccessMessage("Đã xoá toà nhà thành công!", '');
+                    // ids.forEach(id => $('#table tbody tr[data-id="' + id + '"]').remove());
+                    showSuccessMessage("Đã xoá toà nhà thành công!", '${buildingsUrl}');
                 },
                 error: function () {
                     console.log("Error");

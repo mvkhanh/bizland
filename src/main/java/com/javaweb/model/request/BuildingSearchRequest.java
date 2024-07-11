@@ -7,7 +7,7 @@ public class BuildingSearchRequest {
     private String name, ward, street, direction, managerPhone, managerName, district;
     private Integer numberOfBasements, areaTo, areaFrom, level, id_staff;
     private Double floorArea, rentPriceTo, rentPriceFrom;
-    private  Integer pageNumber = 0, pageSize = 2;
+    private  Integer pageNumber = 0, pageSize = 5;
 
     public Integer getPageSize() {
         return pageSize;

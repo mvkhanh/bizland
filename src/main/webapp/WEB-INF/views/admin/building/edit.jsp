@@ -29,15 +29,15 @@
         </div>
 
         <div class="page-content">
-                    <div class="page-header">
-                        <h1>
-                            <c:if test="${empty id}">Thêm toà nhà</c:if>
-                            <c:if test="${not empty id}">Cập nhật thông tin toà nhà</c:if>
-                        </h1>
-                    </div>
+            <div class="page-header">
+                <h1>
+                    <c:if test="${empty id}">Thêm toà nhà</c:if>
+                    <c:if test="${not empty id}">Cập nhật thông tin toà nhà</c:if>
+                </h1>
+            </div>
             <div class="row" style="font-family: 'Times New Roman', Times, serif;">
                 <div class="col-xs-12">
-                    <form:form class="form-horizontal" role="form" id="addOrEditForm" modelAttribute="building">
+                    <form:form class="form-horizontal" role="form" id="addOrEditForm" modelAttribute="building" enctype="multipart/form-data" method="post">
                         <div class="row" style="margin-bottom: 2em;">
                             <label class="col-xs-3">Tên toà nhà</label>
                             <form:input class="col-xs-7" placeholder="Nhập tên toà nhà" path="name"/>
@@ -149,11 +149,11 @@
                         </div>
                         <div class="row">
                             <label class="col-xs-3">Hình đại diện</label>
-                            <input class="col-xs-7" type="file">
+                            <form:input path="imageFile" class="col-xs-7" id="avatarInput" type="file" onchange="previewImage(this);" accept="image/*"/>
                         </div>
                         <div class="row" style="margin-bottom: 1em;">
                             <div class="col-xs-3"></div>
-                            <img src="" alt="Chưa chọn hình đại diện" width="300px" height="200px">
+                            <img id="avatarPreview" alt="Chưa chọn hình đại diện" width="300px" height="200px" src="data:image/jpeg;base64,${image}">
                         </div>
                         <div class="row center">
                             <button type="button" class="btn btn-xs btn-success" style="font-size: 16px; margin-right: 1em;" id="btn-submit">
@@ -173,30 +173,79 @@
     </div>
     <script>
         $('#btn-submit').click(function(){
-            var data = {};
+            <%--var data = {};--%>
+            <%--var typeCodes = [];--%>
+            <%--var formData = $('#addOrEditForm').serializeArray();--%>
+            <%--$.each(formData, function(i, v){--%>
+            <%--    if(v.name != 'typeCodes') data[v.name] = v.value;--%>
+            <%--    else typeCodes.push(v.value);--%>
+            <%--})--%>
+            <%--data['typeCodes'] = typeCodes;--%>
+            <%--$.ajax({--%>
+            <%--    type:"post",--%>
+            <%--    url:"${buildingsUrl}",--%>
+            <%--    data:JSON.stringify(data),--%>
+            <%--    contentType:"Application/JSON",--%>
+            <%--    success: function () {--%>
+            <%--        console.log("Success");--%>
+            <%--        let actionText = data.id !== "" ? "cập nhật thông tin" : "thêm";--%>
+            <%--        showSuccessMessage('Đã ' + actionText + ' toà nhà thành công!', "${buildingsUrl}");--%>
+            <%--    },--%>
+            <%--    error: function () {--%>
+            <%--        console.log("Error");--%>
+            <%--        showErrorMessage("There was an error processing your request.");--%>
+            <%--    }--%>
+            <%--})--%>
+            var formData = new FormData();
             var typeCodes = [];
-            var formData = $('#addOrEditForm').serializeArray();
-            $.each(formData, function(i, v){
-                if(v.name != 'typeCodes') data[v.name] = v.value;
-                else typeCodes.push(v.value);
-            })
-            data['typeCodes'] = typeCodes;
+            var formFields = $('#addOrEditForm').serializeArray();
+
+            // Thêm các trường từ form vào FormData
+            $.each(formFields, function(i, v){
+                if(v.name != 'typeCodes') {
+                    formData.append(v.name, v.value);
+                } else {
+                    typeCodes.push(v.value);
+                }
+            });
+
+            // Thêm typeCodes vào FormData
+            formData.append('typeCodes', JSON.stringify(typeCodes));
+
+            // Thêm hình ảnh vào FormData
+            var fileInput = $('#avatarInput')[0]; // Giả sử input file của bạn có id là 'fileInput'
+            if (fileInput.files.length > 0) {
+                formData.append('imageFile', fileInput.files[0]);
+            }
             $.ajax({
-                type:"post",
-                url:"${buildingsUrl}",
-                data:JSON.stringify(data),
-                contentType:"Application/JSON",
+                type: "post",
+                url: "${buildingsUrl}",
+                data: formData,
+                contentType: false,
+                processData: false,
                 success: function () {
                     console.log("Success");
-                    let actionText = data.id !== "" ? "cập nhật thông tin" : "thêm";
+                    let actionText = formData.get('id') !== "" ? "cập nhật thông tin" : "thêm";
                     showSuccessMessage('Đã ' + actionText + ' toà nhà thành công!', "${buildingsUrl}");
                 },
                 error: function () {
                     console.log("Error");
                     showErrorMessage("There was an error processing your request.");
                 }
-            })
+            });
         })
+        function previewImage(input){
+            let preview = document.getElementById('avatarPreview');
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                };
+                reader.readAsDataURL(input.files[0]);
+            } else {
+                preview.src = "";
+            }
+        }
     </script>
 
 </body>

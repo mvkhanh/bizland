@@ -73,6 +73,10 @@ public class BuildingEntity extends BaseEntity{
     @Column(name = "typecodes")
     private String typeCodes;
 
+    @Lob
+    @Column(columnDefinition="LONGBLOB")
+    private byte[] image;
+
     @OneToMany(mappedBy = "building", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RentAreaEntity> rentAreas = new ArrayList<>();
 
@@ -251,5 +255,13 @@ public class BuildingEntity extends BaseEntity{
 
     public void setTypeCodes(String typeCodes) {
         this.typeCodes = typeCodes;
+    }
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
     }
 }

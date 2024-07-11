@@ -5,10 +5,12 @@ import com.javaweb.model.dto.BuildingDTO;
 import com.javaweb.model.response.BuildingSearchResponse;
 import com.javaweb.repository.entity.BuildingEntity;
 import com.javaweb.repository.entity.RentAreaEntity;
+import com.javaweb.utils.FileUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -28,7 +30,7 @@ public class BuildingConverter {
         else model.setRentAreas("");
         return model;
     }
-    public BuildingEntity DTOToEntity(BuildingDTO dto) {
+    public BuildingEntity DTOToEntity(BuildingDTO dto){
         BuildingEntity entity = modelMapper.map(dto, BuildingEntity.class);
         if(!dto.getRentAreas().isBlank())
             entity.setRentAreas(Arrays.stream(dto.getRentAreas().split(", ")).map(i -> {
@@ -38,12 +40,14 @@ public class BuildingConverter {
                 return area;
             }).toList());
         entity.setTypeCodes(String.join(",", dto.getTypeCodes()));
+        entity.setImage(FileUtil.FileToByte(dto.getImageFile()));
         return entity;
     }
     public BuildingDTO EntityToDTO(BuildingEntity entity){
         BuildingDTO dto = modelMapper.map(entity, BuildingDTO.class);
         dto.setRentAreas(entity.getRentAreas().stream().map(i -> i.getValue().toString()).collect(Collectors.joining(", ")));
         dto.setTypeCodes(Arrays.stream(entity.getTypeCodes().split(",")).toList());
+        dto.setImageFile(FileUtil.ByteToFile(entity.getImage()));
         return dto;
     }
 }

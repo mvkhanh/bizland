@@ -1,6 +1,7 @@
 package com.javaweb.model.dto;
 
 import com.javaweb.repository.entity.RentAreaEntity;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +33,7 @@ public class BuildingDTO extends AbstractDTO{
     private String rentAreas;
     private String note;
     private List<String> typeCodes = new ArrayList<>();
+    private MultipartFile imageFile;
 
     public String getName() {
         return name;
@@ -201,5 +203,13 @@ public class BuildingDTO extends AbstractDTO{
 
     public void setRentAreas(String rentAreas) {
         this.rentAreas = rentAreas;
+    }
+
+    public MultipartFile getImageFile() {
+        return imageFile;
+    }
+
+    public void setImageFile(MultipartFile imageFile) {
+        this.imageFile = imageFile;
     }
 }

@@ -47,7 +47,9 @@ public class BuildingService implements IBuildingService {
 
     @Override
     public void addOrUpdate(BuildingDTO dto) {
-        buildingRepository.save(buildingConverter.DTOToEntity(dto));
+        BuildingEntity entity = buildingConverter.DTOToEntity(dto);
+        if(dto.getId() != null && dto.getImageFile() == null) entity.setImage(buildingRepository.findById(dto.getId()).get().getImage());
+        buildingRepository.save(entity);
     }
 
     @Override

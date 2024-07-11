@@ -16,7 +16,7 @@ public class BuildingAPI {
     IBuildingService service;
 
     @PostMapping
-    public void addOrUpdate(@RequestBody BuildingDTO dto){
+    public void addOrUpdate(@ModelAttribute BuildingDTO dto){
         service.addOrUpdate(dto);
     }
 
