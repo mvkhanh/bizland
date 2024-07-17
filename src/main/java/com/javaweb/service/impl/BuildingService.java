@@ -3,6 +3,7 @@ package com.javaweb.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.javaweb.enums.Role;
 import com.javaweb.model.request.BuildingAssignmentRequest;
 import com.javaweb.model.request.BuildingSearchRequest;
 import com.javaweb.model.dto.BuildingDTO;
@@ -60,7 +61,7 @@ public class BuildingService implements IBuildingService {
     @Override
     public Response getStaffs(Integer id) {
         List<StaffResponse> staffResponses = new ArrayList<>();
-        userRepository.findAllByStatusAndRoles_code(1, "STAFF").forEach(
+        userRepository.findAllByStatusAndRolesContaining(1, Role.STAFF.name()).forEach(
                 staff -> staffResponses.add(new StaffResponse(staff.getId(), staff.getFullName(), buildingRepository.findById(id).get().getUsers().contains(staff) ? "checked" : "")));
         return new Response.RequestBuilder().data(staffResponses).build();
     }

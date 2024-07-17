@@ -8,7 +8,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
 
+@Setter
+@Getter
 @Entity
 @Table(name = "rentarea")
 public class RentAreaEntity extends BaseEntity{
@@ -18,21 +22,4 @@ public class RentAreaEntity extends BaseEntity{
     @ManyToOne
     @JoinColumn(name = "id_building")
     private BuildingEntity building;
-
-    public Integer getValue() {
-        return value;
-    }
-
-    public void setValue(Integer value) {
-        this.value = value;
-    }
-
-    public BuildingEntity getBuilding() {
-        return building;
-    }
-
-    public void setBuilding(BuildingEntity building) {
-        this.building = building;
-    }
-
 }

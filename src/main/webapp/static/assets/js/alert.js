@@ -7,9 +7,7 @@ function showSuccessMessage(message, redirectUrl) {
         timerProgressBar: true,
         confirmButtonText: 'OK'
     }).then((result) => {
-        if (result.dismiss === Swal.DismissReason.timer || result.isConfirmed) {
-            if(redirectUrl !== '') window.location.href = redirectUrl;
-        }
+        if ((result.dismiss === Swal.DismissReason.timer || result.isConfirmed) && redirectUrl != '') window.location.href = redirectUrl;
     });
 }
 

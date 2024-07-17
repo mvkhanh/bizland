@@ -46,7 +46,7 @@
                             <label class="col-xs-3">Quận</label>
                             <form:select class="col-xs-2" path="district">
                                 <form:option value="">--Chọn quận--</form:option>
-                                <form:options items="${district}"/>
+                                <form:options items="${districts}"/>
                             </form:select>
                         </div>
                         <div class="row" style="margin-bottom: 1em;">
@@ -173,34 +173,9 @@
     </div>
     <script>
         $('#btn-submit').click(function(){
-            <%--var data = {};--%>
-            <%--var typeCodes = [];--%>
-            <%--var formData = $('#addOrEditForm').serializeArray();--%>
-            <%--$.each(formData, function(i, v){--%>
-            <%--    if(v.name != 'typeCodes') data[v.name] = v.value;--%>
-            <%--    else typeCodes.push(v.value);--%>
-            <%--})--%>
-            <%--data['typeCodes'] = typeCodes;--%>
-            <%--$.ajax({--%>
-            <%--    type:"post",--%>
-            <%--    url:"${buildingsUrl}",--%>
-            <%--    data:JSON.stringify(data),--%>
-            <%--    contentType:"Application/JSON",--%>
-            <%--    success: function () {--%>
-            <%--        console.log("Success");--%>
-            <%--        let actionText = data.id !== "" ? "cập nhật thông tin" : "thêm";--%>
-            <%--        showSuccessMessage('Đã ' + actionText + ' toà nhà thành công!', "${buildingsUrl}");--%>
-            <%--    },--%>
-            <%--    error: function () {--%>
-            <%--        console.log("Error");--%>
-            <%--        showErrorMessage("There was an error processing your request.");--%>
-            <%--    }--%>
-            <%--})--%>
             var formData = new FormData();
             var typeCodes = [];
             var formFields = $('#addOrEditForm').serializeArray();
-
-            // Thêm các trường từ form vào FormData
             $.each(formFields, function(i, v){
                 if(v.name != 'typeCodes') {
                     formData.append(v.name, v.value);
@@ -208,12 +183,8 @@
                     typeCodes.push(v.value);
                 }
             });
-
-            // Thêm typeCodes vào FormData
             formData.append('typeCodes', JSON.stringify(typeCodes));
-
-            // Thêm hình ảnh vào FormData
-            var fileInput = $('#avatarInput')[0]; // Giả sử input file của bạn có id là 'fileInput'
+            var fileInput = $('#avatarInput')[0];
             if (fileInput.files.length > 0) {
                 formData.append('imageFile', fileInput.files[0]);
             }

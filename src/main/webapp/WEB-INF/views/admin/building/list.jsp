@@ -128,6 +128,9 @@
                                     <form:hidden path="pageNumber" id="pageNumber"/>
                                     <form:hidden path="pageSize" id="pageSize"/>
                                     <div class="row">
+                                        <div class="pull-left">
+                                            <button type="button" class="btn btn-danger btn-xs" style="font-size: 16px; margin-left: 10px" id="btn-clear">Xoá tất cả</button>
+                                        </div>
                                         <div class="pull-right">
                                             <button type="button" class="btn btn-primary btn-xs" style="font-size: 16px; margin-right: 10px" id="btn-search">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="12" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
@@ -375,7 +378,6 @@
                 datatype:"JSON",
                 success: function () {
                     console.log("Success");
-                    // ids.forEach(id => $('#table tbody tr[data-id="' + id + '"]').remove());
                     showSuccessMessage("Đã xoá toà nhà thành công!", '${buildingsUrl}');
                 },
                 error: function () {
@@ -392,6 +394,10 @@
                 checkboxes.forEach(checkbox => checkbox.checked = checkAll.checked);
             });
         });
+        $('#btn-clear').click(function (){
+            $('#listForm').find('input[type="text"], input[type="number"], input[type="email"], select, textarea').val('');
+            $('#listForm').find('input[type="checkbox"]').prop('checked', false);
+        })
     </script>
 </body>
 </html>

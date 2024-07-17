@@ -9,13 +9,9 @@ import com.javaweb.service.IUserService;
 import com.javaweb.utils.FileUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-
-import java.io.IOException;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,10 +23,10 @@ public class BuildingController {
 
     @Autowired
     private IUserService userService;
-    private Map<String, Object> models = new HashMap<>();
+    private final Map<String, Object> models = new HashMap<>();
 
     public BuildingController(){
-        models.put("district", District.getDistricts());
+        models.put("districts", District.getDistricts());
         models.put("typecodes", TypeCode.getTypecodes());
     }
     @GetMapping("/buildings")

@@ -6,6 +6,7 @@ import com.javaweb.model.response.BuildingSearchResponse;
 import com.javaweb.repository.entity.BuildingEntity;
 import com.javaweb.repository.entity.RentAreaEntity;
 import com.javaweb.utils.FileUtil;
+import com.javaweb.utils.StringUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Component
 public class BuildingConverter {
@@ -23,8 +25,8 @@ public class BuildingConverter {
 
     public BuildingSearchResponse EntityToSearchResponse(BuildingEntity entity) {
         BuildingSearchResponse model = modelMapper.map(entity, BuildingSearchResponse.class);
-        if(!entity.getDistrict().isBlank())
-            model.setAddress(entity.getStreet() + ", " + entity.getWard() + ", " + District.valueOf(entity.getDistrict()).getName());
+        model.setAddress(Stream.of(entity.getStreet(), entity.getWard(), StringUtil.checkString(entity.getDistrict()) ? District.valueOf(entity.getDistrict()).getName() : null)
+                .filter(StringUtil::checkString).collect(Collectors.joining(", ")));
         if(!entity.getRentAreas().isEmpty())
             model.setRentAreas(entity.getRentAreas().stream().map(i -> i.getValue().toString()).collect(Collectors.joining(", ")));
         else model.setRentAreas("");
@@ -39,7 +41,7 @@ public class BuildingConverter {
                 area.setValue(Integer.valueOf(i));
                 return area;
             }).toList());
-        entity.setTypeCodes(String.join(",", dto.getTypeCodes()));
+        entity.setTypeCodes(String.join(",", dto.getTypeCodes().stream().map(i -> i.replaceAll("[\"\\[\\]]", "")).toList()));
         entity.setImage(FileUtil.FileToByte(dto.getImageFile()));
         return entity;
     }
