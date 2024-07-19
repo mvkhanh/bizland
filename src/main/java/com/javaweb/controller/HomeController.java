@@ -8,10 +8,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-@RequestMapping("/admin")
 public class HomeController {
-    @GetMapping("/home")
+    @GetMapping("/admin/home")
     public ModelAndView getList(HttpServletRequest request){
         return new ModelAndView("admin/home");
+    }
+    @GetMapping("/login")
+    public ModelAndView login(HttpServletRequest request){
+        return new ModelAndView("login");
     }
 }

@@ -27,7 +27,6 @@ public class BuildingAPI {
 
     @GetMapping("/{id}/staffs")
     public Response getStaffs(@PathVariable Integer id){
-
         return service.getStaffs(id);
     }
 

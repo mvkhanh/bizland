@@ -31,17 +31,17 @@ public class JwtUtil {
         return claimsResolver.apply(extractAllClaims(token));
     }
     public String generateToken(UserDetails details){
-        return generateToken(new HashMap<>(), details);
-    }
-    public String generateToken(Map<String, Object> extraClaims, UserDetails details){
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("username", details.getUsername());
         return Jwts.builder()
-                .setClaims(extraClaims)
+                .setClaims(claims)
                 .setSubject(details.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
+
     public boolean isTokenValid(String token, UserDetails details){
         return extractUsername(token).equals(details.getUsername()) && !isTokenExpired(token);
     }

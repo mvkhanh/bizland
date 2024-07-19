@@ -31,7 +31,7 @@ public class UserEntity extends BaseEntity implements UserDetails {
 
     private String email;
 
-    private Integer status = 1;
+    private Integer status;
 
     private String roles;
 

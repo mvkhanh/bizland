@@ -47,6 +47,7 @@ public class UserService implements IUserService {
                 .roles(Role.USER.name())
                 .username(username)
                 .fullName(registerRequest.getFullName())
+                .status(1)
                 .password(passwordEncoder.encode(registerRequest.getPassword()))
                 .build();
         return repository.save(entity);

@@ -2,6 +2,7 @@ package com.javaweb.config;
 
 import com.javaweb.enums.Role;
 import com.javaweb.filter.JwtAuthenticationFilter;
+import jakarta.servlet.DispatcherType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,7 +27,7 @@ public class WebSecurityConfig {
                 .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(requests -> {
                     requests
-                            .requestMatchers("/login", "/register").permitAll() //và các api không cần đăng nhập khác
+                            .requestMatchers("**").permitAll()
                             .requestMatchers("/admin/**").hasAnyRole(Role.MANAGER.name())
                             //Cần phải cụ thể các phương thức như GET POST đối với từng api, user-edit chỉ cho phép admin chứ ko staff
                             .anyRequest().authenticated();

@@ -1,8 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8"%>
 <%@ include file="../../common/taglib.jsp"%>
-<c:url var="loginUrl" value="login"/>
-<c:url var="registerUrl" value="register"/>
-<c:url var="adminHomeUrl" value="admin/home"/>
+<c:url var="loginUrl" value="/login"/>
+<c:url var="registerUrl" value="/register"/>
+<c:url var="adminHomeUrl" value="/admin/home"/>
 <html>
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
@@ -32,7 +32,7 @@
                         <div id="login-box" class="login-box visible widget-box no-border">
                             <div class="widget-body">
                                 <div class="widget-main">
-                                    <h4 class="header blue lighter bigger">
+                                    <h4 class="header blue lighter bigger" style="font-family: 'Times New Roman',serif">
                                         <i class="ace-icon fa fa-coffee green"></i>
                                         Nhập tài khoản và mật khẩu
                                     </h4>
@@ -156,9 +156,9 @@
                         <div id="signup-box" class="signup-box widget-box no-border">
                             <div class="widget-body">
                                 <div class="widget-main">
-                                    <h4 class="header green lighter bigger">
+                                    <h4 class="header green lighter bigger" style="font-family: 'Times New Roman',serif">
                                         <i class="ace-icon fa fa-users blue"></i>
-                                        New User Registration
+                                        Đăng ký
                                     </h4>
 
                                     <div class="space-6"></div>
@@ -168,28 +168,28 @@
                                         <fieldset>
                                             <label class="block clearfix">
 														<span class="block input-icon input-icon-right">
-															<input type="email" class="form-control" placeholder="Email" />
+															<input type="email" class="form-control" placeholder="Email" id="email"/>
 															<i class="ace-icon fa fa-envelope"></i>
 														</span>
                                             </label>
 
                                             <label class="block clearfix">
 														<span class="block input-icon input-icon-right">
-															<input type="text" class="form-control" placeholder="Username" />
+															<input type="text" class="form-control" placeholder="Username" id="registerUsername"/>
 															<i class="ace-icon fa fa-user"></i>
 														</span>
                                             </label>
 
                                             <label class="block clearfix">
 														<span class="block input-icon input-icon-right">
-															<input type="password" class="form-control" placeholder="Password" />
+															<input type="password" class="form-control" placeholder="Password" id="registerPassword"/>
 															<i class="ace-icon fa fa-lock"></i>
 														</span>
                                             </label>
 
                                             <label class="block clearfix">
 														<span class="block input-icon input-icon-right">
-															<input type="password" class="form-control" placeholder="Repeat password" />
+															<input type="password" class="form-control" placeholder="Repeat password" id="retypePassword"/>
 															<i class="ace-icon fa fa-retweet"></i>
 														</span>
                                             </label>
@@ -210,7 +210,7 @@
                                                     <span class="bigger-110">Reset</span>
                                                 </button>
 
-                                                <button type="button" class="width-65 pull-right btn btn-sm btn-success">
+                                                <button type="button" class="width-65 pull-right btn btn-sm btn-success" id="btn-register">
                                                     <span class="bigger-110">Register</span>
 
                                                     <i class="ace-icon fa fa-arrow-right icon-on-right"></i>
@@ -221,7 +221,7 @@
                                 </div>
 
                                 <div class="toolbar center">
-                                    <a href="#" data-target="#login-box" class="back-to-login-link">
+                                    <a href="#" data-target="#login-box" class="back-to-login-link" id="back-to-login">
                                         <i class="ace-icon fa fa-arrow-left"></i>
                                         Back to login
                                     </a>
@@ -267,7 +267,8 @@
 <script src="../../static/assets/js/jquery-2.1.4.min.js"></script>
 
 <!-- <![endif]-->
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="../../static/assets/js/alert.js"></script>
 <script type="text/javascript">
     if('ontouchstart' in document.documentElement) document.write("<script src='../../static/assets/js/jquery.mobile.custom.min.js'>"+"<"+"/script>");
 </script>
@@ -310,25 +311,84 @@
         });
 
     });
-    $('#btn-login').click(function (){
+    $('#btn-register').click(function (){
         let data = {};
-        data.append("username", $('#username').val());
-        data.append("password", $('#password').val());
+        data["username"] = $('#registerUsername').val();
+        data["password"] = $('#registerPassword').val();
+        data["retypePassword"] = $('#retypePassword').val();
+        data["email"] = $('#email').val();
         $.ajax({
             type: "post",
-            url: ${loginUrl},
+            url: "${registerUrl}",
             data: JSON.stringify(data),
             contentType: "Application/JSON",
             success: function (response) {
                 console.log("Success");
-                showSuccessMessage("Đăng nhập thành công!", '${adminHomeUrl}');
+                showSuccessMessage("Đăng ký thành công!", '${loginUrl}');
             },
             error: function (response) {
                 console.log("Error");
-                showErrorMessage('There was an error processing your request.');
+                showErrorMessage(response.responseText);
             }
         })
     })
+    $('#btn-login').click(function (){
+        let data = {};
+        data["username"] = $('#username').val();
+        data["password"] = $('#password').val();
+        $.ajax({
+            type: "post",
+            url: "${loginUrl}",
+            data: JSON.stringify(data),
+            contentType: "Application/JSON",
+            success: function (response) {
+                const token = response;
+                if (token) {
+                    localStorage.setItem('authToken', token);
+                    showSuccessMessage("Đăng nhập thành công!", '');
+                    makeAuthenticatedRequest('${adminHomeUrl}');
+                    <%--window.location.href = '${adminHomeUrl}';--%>
+                } else {
+                    showErrorMessage("Token is missing in the response.");
+                }
+            },
+            error: function (response) {
+                console.log("Error");
+                showErrorMessage(response.responseText);
+            }
+        })
+    })
+    function normalizeURI(url) {
+        try {
+            const a = document.createElement('a');
+            a.href = url;
+            return a.href;
+        } catch (e) {
+            console.error("Invalid URL:", e);
+            return null;
+        }
+    }
+    function makeAuthenticatedRequest(url) {
+        const token = localStorage.getItem('authToken');
+        const normalizedUrl = normalizeURI(url);
+        if (token) {
+            $.ajax({
+                type: "GET",
+                url: normalizedUrl,
+                headers: {'Authorization': 'Bearer ' + token},
+                success: function (response) {
+                    console.log("Protected request success:", response);
+                    window.location.href = url;
+                },
+                error: function (response) {
+                    console.log("Protected request error:", response);
+                    showErrorMessage("Unauthorized or invalid token.");
+                }
+            });
+        } else {
+            console.log("No token found. Please log in.");
+        }
+    }
 </script>
 </body>
 </html>

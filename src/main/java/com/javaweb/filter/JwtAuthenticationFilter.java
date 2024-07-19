@@ -12,7 +12,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -31,18 +30,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
         try {
-            if(!isBypassToken(request)){
+            if(isBypassToken(request)){
                 filterChain.doFilter(request, response);
                 return;
             }
             final String authHeader = request.getHeader("Authorization");
-            if(authHeader == null || !authHeader.startsWith("Bearer ")){
-                filterChain.doFilter(request, response);
-                return;
-            }
+            if(authHeader == null || !authHeader.startsWith("Bearer ")) throw new Exception();
             final String jwt = authHeader.substring(7);
             final String username = jwtUtil.extractUsername(jwt);
-            if(username != null && !SecurityContextHolder.getContext().getAuthentication().isAuthenticated()){
+            if(username != null && SecurityContextHolder.getContext().getAuthentication() == null){
                 UserDetails userDetail = userDetailsService.loadUserByUsername(username);
                 if(jwtUtil.isTokenValid(jwt, userDetail)){
                     UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(userDetail, null, userDetail.getAuthorities());
@@ -52,18 +48,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
             filterChain.doFilter(request, response);
         } catch (Exception e) {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+//            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
         }
     }
 
     private boolean isBypassToken(HttpServletRequest request) {
         final List<Pair<String, String>> bypassTokens = Arrays.asList(
                 Pair.of("/login", "POST"),
-                Pair.of("/register", "POST")
+                Pair.of("/register", "POST"),
+                Pair.of("/login", "GET"),
+                Pair.of("/", "GET")
                 //Các trang không cần đăng nhập khác...
         );
         for (Pair<String, String> token : bypassTokens)
-            if(request.getServletPath().equals(token.getFirst()) && request.getMethod().equals(token.getSecond()))
+            if(request.getServletPath().contains(token.getFirst()) && request.getMethod().equals(token.getSecond()))
                 return true;
         return false;
     }

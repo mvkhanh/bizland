@@ -35,7 +35,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest){
+    public ResponseEntity<String> login(@Valid @RequestBody LoginRequest loginRequest){
         try {
             return ResponseEntity.ok(service.login(loginRequest.getUsername(), loginRequest.getPassword()));
         } catch (Exception e) {
