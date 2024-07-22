@@ -1,11 +1,5 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: mvk
-  Date: 04/07/2024
-  Time: 08:13
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ include file="../../common/taglib.jsp"%>
 <div id="navbar" class="navbar navbar-default          ace-save-state">
     <div class="navbar-container ace-save-state" id="navbar-container">
         <button type="button" class="navbar-toggle menu-toggler pull-left" id="menu-toggler" data-target="#sidebar">
@@ -31,10 +25,10 @@
             <ul class="nav ace-nav">
                 <li class="light-blue dropdown-modal">
                     <a data-toggle="dropdown" href="#" class="dropdown-toggle">
-                        <img class="nav-user-photo" src="../../../static/assets/images/avatars/user.jpg" alt="Jason's Photo" />
+                        <img class="nav-user-photo" src="../../static/assets/images/avatars/user.jpg" alt="Jason's Photo" />
                         <span class="user-info">
 									<small>Welcome,</small>
-									MVK
+									<c:if test="${not empty sessionScope.user}">${sessionScope.user.fullName}</c:if>
 								</span>
 
                         <i class="ace-icon fa fa-caret-down"></i>
@@ -58,7 +52,7 @@
                         <li class="divider"></li>
 
                         <li>
-                            <a href="#">
+                            <a href="/logout">
                                 <i class="ace-icon fa fa-power-off"></i>
                                 Logout
                             </a>

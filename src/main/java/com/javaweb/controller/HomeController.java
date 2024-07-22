@@ -10,11 +10,16 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class HomeController {
     @GetMapping("/admin/home")
-    public ModelAndView getList(HttpServletRequest request){
+    public ModelAndView admin(HttpServletRequest request){
         return new ModelAndView("admin/home");
     }
     @GetMapping("/login")
     public ModelAndView login(HttpServletRequest request){
         return new ModelAndView("login");
+    }
+
+    @GetMapping("/trang-chu")
+    public ModelAndView user(HttpServletRequest request){
+        return new ModelAndView("web/home");
     }
 }

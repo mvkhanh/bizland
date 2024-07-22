@@ -1,12 +1,14 @@
 package com.javaweb.controller;
 
 import com.javaweb.enums.District;
+import com.javaweb.enums.Role;
 import com.javaweb.enums.TypeCode;
 import com.javaweb.model.dto.BuildingDTO;
 import com.javaweb.model.request.BuildingSearchRequest;
 import com.javaweb.service.IBuildingService;
 import com.javaweb.service.IUserService;
 import com.javaweb.utils.FileUtil;
+import com.javaweb.security.utils.SecurityUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -32,6 +34,7 @@ public class BuildingController {
     @GetMapping("/buildings")
     public ModelAndView getList(@ModelAttribute("search") BuildingSearchRequest search){
         ModelAndView mav = new ModelAndView("admin/building/list", models);
+        if(SecurityUtil.getRoles().contains(Role.STAFF.name())) search.setId_staff(SecurityUtil.getUserDetail().getId());
         mav.addObject("result", buildingService.findAll(search));
         mav.addObject("staffs", userService.findAllStaff());
         return mav;

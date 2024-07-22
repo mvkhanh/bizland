@@ -3,6 +3,7 @@
 <c:url var="loginUrl" value="/login"/>
 <c:url var="registerUrl" value="/register"/>
 <c:url var="adminHomeUrl" value="/admin/home"/>
+<%--<c:url var="loginCheckUrl" value="/login-check"/>--%>
 <html>
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
@@ -39,20 +40,20 @@
 
                                     <div class="space-6"></div>
 
-                                    <form>
+                                    <form action="${loginUrl}" method="post">
                                         <fieldset>
                                             <label class="block clearfix">
-														<span class="block input-icon input-icon-right">
-															<input type="text" class="form-control" placeholder="Username" id="username"/>
-															<i class="ace-icon fa fa-user"></i>
-														</span>
+                                                <span class="block input-icon input-icon-right">
+                                                    <input type="text" class="form-control" placeholder="Nhập tài khoản" id="username" name="username" required/>
+                                                    <i class="ace-icon fa fa-user"></i>
+                                                </span>
                                             </label>
 
                                             <label class="block clearfix">
-														<span class="block input-icon input-icon-right">
-															<input type="password" class="form-control" placeholder="Password" id="password"/>
-															<i class="ace-icon fa fa-lock"></i>
-														</span>
+                                                <span class="block input-icon input-icon-right">
+                                                    <input type="password" class="form-control" placeholder="Nhập mật khẩu" id="password" name="password" required/>
+                                                    <i class="ace-icon fa fa-lock"></i>
+                                                </span>
                                             </label>
 
                                             <div class="space"></div>
@@ -63,7 +64,7 @@
                                                     <span class="lbl"> Remember Me</span>
                                                 </label>
 
-                                                <button type="button" class="width-35 pull-right btn btn-sm btn-primary" id="btn-login">
+                                                <button type="submit" class="width-35 pull-right btn btn-sm btn-primary">
                                                     <i class="ace-icon fa fa-key"></i>
                                                     <span class="bigger-110">Login</span>
                                                 </button>
@@ -164,32 +165,32 @@
                                     <div class="space-6"></div>
                                     <p> Enter your details to begin: </p>
 
-                                    <form>
+                                    <form action="${registerUrl}" method="post">
                                         <fieldset>
                                             <label class="block clearfix">
 														<span class="block input-icon input-icon-right">
-															<input type="email" class="form-control" placeholder="Email" id="email"/>
+															<input type="email" class="form-control" placeholder="Nhập email" id="email" name="email"/>
 															<i class="ace-icon fa fa-envelope"></i>
 														</span>
                                             </label>
 
                                             <label class="block clearfix">
 														<span class="block input-icon input-icon-right">
-															<input type="text" class="form-control" placeholder="Username" id="registerUsername"/>
+															<input type="text" class="form-control" placeholder="Nhập tài khoản" id="registerUsername" name="username"/>
 															<i class="ace-icon fa fa-user"></i>
 														</span>
                                             </label>
 
                                             <label class="block clearfix">
 														<span class="block input-icon input-icon-right">
-															<input type="password" class="form-control" placeholder="Password" id="registerPassword"/>
+															<input type="password" class="form-control" placeholder="Nhập mật khẩu" id="registerPassword" name="password"/>
 															<i class="ace-icon fa fa-lock"></i>
 														</span>
                                             </label>
 
                                             <label class="block clearfix">
 														<span class="block input-icon input-icon-right">
-															<input type="password" class="form-control" placeholder="Repeat password" id="retypePassword"/>
+															<input type="password" class="form-control" placeholder="Nhập lại mật khẩu" id="retypePassword" name="retypePassword"/>
 															<i class="ace-icon fa fa-retweet"></i>
 														</span>
                                             </label>
@@ -230,20 +231,6 @@
                         </div><!-- /.signup-box -->
                     </div><!-- /.position-relative -->
 
-                    <div class="navbar-fixed-top align-right">
-                        <br />
-                        &nbsp;
-                        <a id="btn-login-dark" href="#">Dark</a>
-                        &nbsp;
-                        <span class="blue">/</span>
-                        &nbsp;
-                        <a id="btn-login-blur" href="#">Blur</a>
-                        &nbsp;
-                        <span class="blue">/</span>
-                        &nbsp;
-                        <a id="btn-login-light" href="#">Light</a>
-                        &nbsp; &nbsp; &nbsp;
-                    </div>
                 </div>
             </div><!-- /.col -->
         </div><!-- /.row -->
@@ -284,33 +271,6 @@
         });
     });
 
-
-
-    //you don't need this, just used for changing background
-    jQuery(function($) {
-        $('#btn-login-dark').on('click', function(e) {
-            $('body').attr('class', 'login-layout');
-            $('#id-text2').attr('class', 'white');
-            $('#id-company-text').attr('class', 'blue');
-
-            e.preventDefault();
-        });
-        $('#btn-login-light').on('click', function(e) {
-            $('body').attr('class', 'login-layout light-login');
-            $('#id-text2').attr('class', 'grey');
-            $('#id-company-text').attr('class', 'blue');
-
-            e.preventDefault();
-        });
-        $('#btn-login-blur').on('click', function(e) {
-            $('body').attr('class', 'login-layout blur-login');
-            $('#id-text2').attr('class', 'white');
-            $('#id-company-text').attr('class', 'light-blue');
-
-            e.preventDefault();
-        });
-
-    });
     $('#btn-register').click(function (){
         let data = {};
         data["username"] = $('#registerUsername').val();
@@ -332,63 +292,6 @@
             }
         })
     })
-    $('#btn-login').click(function (){
-        let data = {};
-        data["username"] = $('#username').val();
-        data["password"] = $('#password').val();
-        $.ajax({
-            type: "post",
-            url: "${loginUrl}",
-            data: JSON.stringify(data),
-            contentType: "Application/JSON",
-            success: function (response) {
-                const token = response;
-                if (token) {
-                    localStorage.setItem('authToken', token);
-                    showSuccessMessage("Đăng nhập thành công!", '');
-                    makeAuthenticatedRequest('${adminHomeUrl}');
-                    <%--window.location.href = '${adminHomeUrl}';--%>
-                } else {
-                    showErrorMessage("Token is missing in the response.");
-                }
-            },
-            error: function (response) {
-                console.log("Error");
-                showErrorMessage(response.responseText);
-            }
-        })
-    })
-    function normalizeURI(url) {
-        try {
-            const a = document.createElement('a');
-            a.href = url;
-            return a.href;
-        } catch (e) {
-            console.error("Invalid URL:", e);
-            return null;
-        }
-    }
-    function makeAuthenticatedRequest(url) {
-        const token = localStorage.getItem('authToken');
-        const normalizedUrl = normalizeURI(url);
-        if (token) {
-            $.ajax({
-                type: "GET",
-                url: normalizedUrl,
-                headers: {'Authorization': 'Bearer ' + token},
-                success: function (response) {
-                    console.log("Protected request success:", response);
-                    window.location.href = url;
-                },
-                error: function (response) {
-                    console.log("Protected request error:", response);
-                    showErrorMessage("Unauthorized or invalid token.");
-                }
-            });
-        } else {
-            console.log("No token found. Please log in.");
-        }
-    }
 </script>
 </body>
 </html>

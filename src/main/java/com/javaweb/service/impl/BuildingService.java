@@ -49,7 +49,12 @@ public class BuildingService implements IBuildingService {
     @Override
     public void addOrUpdate(BuildingDTO dto) {
         BuildingEntity entity = buildingConverter.DTOToEntity(dto);
-        if(dto.getId() != null && dto.getImageFile() == null) entity.setImage(buildingRepository.findById(dto.getId()).get().getImage());
+        if(dto.getId() != null && dto.getImageFile() == null){
+            BuildingEntity existBuilding = buildingRepository.findById(dto.getId()).get();
+            if(dto.getImageFile() == null) entity.setImage(existBuilding.getImage());
+            entity.setUsers(existBuilding.getUsers());
+        }
+
         buildingRepository.save(entity);
     }
 

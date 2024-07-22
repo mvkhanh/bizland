@@ -1,7 +1,7 @@
 package com.javaweb.enums;
 
 public enum Role {
-    MANAGER,
+    ADMIN,
     USER,
     STAFF
 }
