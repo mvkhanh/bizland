@@ -1,5 +1,8 @@
 package com.javaweb.model.response;
 
+import lombok.Getter;
+
+@Getter
 public class Response {
     private final Object data;
     private final String message;
@@ -9,18 +12,6 @@ public class Response {
         this.data = builder.data;
         this.message = builder.message;
         this.detail = builder.detail;
-    }
-
-    public Object getData() {
-        return data;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public String getDetail() {
-        return detail;
     }
 
     public static class RequestBuilder{

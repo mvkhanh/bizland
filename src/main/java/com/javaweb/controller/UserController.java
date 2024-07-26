@@ -1,45 +1,41 @@
 package com.javaweb.controller;
 
-import com.javaweb.model.request.LoginRequest;
-import com.javaweb.model.request.RegisterRequest;
+import com.javaweb.enums.Role;
+import com.javaweb.model.dto.UserDTO;
+import com.javaweb.model.request.UserSearchRequest;
 import com.javaweb.service.IUserService;
-import jakarta.validation.Valid;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 
-import javax.security.auth.login.CredentialException;
-
-@RestController
+@Controller
+@RequestMapping("/admin")
 @RequiredArgsConstructor
 public class UserController {
     private final IUserService service;
 
-    @PostMapping("/register")
-    public ResponseEntity<?> createUser(@Valid @RequestBody RegisterRequest registerRequest, BindingResult bindingResult){
-        try {
-            if(bindingResult.hasErrors())
-                return ResponseEntity.badRequest().body(
-                        bindingResult.getFieldErrors().stream().map(FieldError::getDefaultMessage)
-                );
-            if(!registerRequest.getPassword().equals(registerRequest.getRetypePassword()))
-                throw new CredentialException("Password not match");
-            return ResponseEntity.ok(service.createUser(registerRequest));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    @GetMapping("/users")
+    public ModelAndView list(@ModelAttribute("search") UserSearchRequest search){
+        ModelAndView mav = new ModelAndView("admin/user/list");
+        mav.addObject("roles", Role.getRoles());
+        mav.addObject("result", service.findAll(search));
+        return mav;
     }
 
-//    @PostMapping("/login-check")
-//    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest){
-//        try {
-//            return ResponseEntity.ok(service.login(loginRequest.getUsername(), loginRequest.getPassword()));
-//        } catch (Exception e) {
-//            return ResponseEntity.badRequest().body(e.getMessage());
-//        }
-//    }
+    @GetMapping("/users-edit")
+    public ModelAndView add(@ModelAttribute("user") UserDTO dto, HttpServletRequest request){
+        return new ModelAndView("admin/user/edit", "roles", Role.getRoles());
+    }
+
+    @GetMapping("/users-edit-{id}")
+    public ModelAndView edit(@PathVariable Integer id, HttpServletRequest request){
+        ModelAndView mav = new ModelAndView("admin/user/edit", "roles", Role.getRoles());
+        mav.addObject("user", service.findById(id));
+        return mav;
+    }
 }

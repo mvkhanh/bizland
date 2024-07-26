@@ -130,7 +130,7 @@
                                         <fieldset>
                                             <label class="block clearfix">
 														<span class="block input-icon input-icon-right">
-															<input type="email" class="form-control" placeholder="Email" />
+															<input type="email" class="form-control" placeholder="Email" required/>
 															<i class="ace-icon fa fa-envelope"></i>
 														</span>
                                             </label>
@@ -167,30 +167,36 @@
 
                                     <form action="${registerUrl}" method="post">
                                         <fieldset>
+<%--                                            <label class="block clearfix">--%>
+<%--                                                <span class="block input-icon input-icon-right">--%>
+<%--                                                    <input type="text" class="form-control" placeholder="Nhập tài khoản" id="username" name="username" required/>--%>
+<%--                                                    <i class="ace-icon fa fa-user"></i>--%>
+<%--                                                </span>--%>
+<%--                                            </label>--%>
                                             <label class="block clearfix">
 														<span class="block input-icon input-icon-right">
-															<input type="email" class="form-control" placeholder="Nhập email" id="email" name="email"/>
+															<input type="email" class="form-control" placeholder="Nhập email" id="email" name="email" required/>
 															<i class="ace-icon fa fa-envelope"></i>
 														</span>
                                             </label>
 
                                             <label class="block clearfix">
 														<span class="block input-icon input-icon-right">
-															<input type="text" class="form-control" placeholder="Nhập tài khoản" id="registerUsername" name="username"/>
+															<input type="text" class="form-control" placeholder="Nhập tài khoản" id="registerUsername" name="username" required/>
 															<i class="ace-icon fa fa-user"></i>
 														</span>
                                             </label>
 
                                             <label class="block clearfix">
 														<span class="block input-icon input-icon-right">
-															<input type="password" class="form-control" placeholder="Nhập mật khẩu" id="registerPassword" name="password"/>
+															<input type="password" class="form-control" placeholder="Nhập mật khẩu" id="registerPassword" name="password" required/>
 															<i class="ace-icon fa fa-lock"></i>
 														</span>
                                             </label>
 
                                             <label class="block clearfix">
 														<span class="block input-icon input-icon-right">
-															<input type="password" class="form-control" placeholder="Nhập lại mật khẩu" id="retypePassword" name="retypePassword"/>
+															<input type="password" class="form-control" placeholder="Nhập lại mật khẩu" id="retypePassword" name="retypePassword" required/>
 															<i class="ace-icon fa fa-retweet"></i>
 														</span>
                                             </label>

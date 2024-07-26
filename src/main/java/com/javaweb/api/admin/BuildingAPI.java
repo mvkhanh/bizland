@@ -1,11 +1,10 @@
 package com.javaweb.api.admin;
 
 import com.javaweb.model.dto.BuildingDTO;
-import com.javaweb.model.request.BuildingAssignmentRequest;
+import com.javaweb.model.request.AssignmentRequest;
 import com.javaweb.model.response.Response;
 import com.javaweb.service.IBuildingService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,7 +31,7 @@ public class BuildingAPI {
     }
 
     @PutMapping("/assignment")
-    public void assignBuilding(@RequestBody BuildingAssignmentRequest assignmentRequest){
+    public void assignBuilding(@RequestBody AssignmentRequest assignmentRequest){
         service.assignBuilding(assignmentRequest);
     }
 }

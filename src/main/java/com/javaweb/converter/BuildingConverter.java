@@ -6,15 +6,12 @@ import com.javaweb.model.response.BuildingSearchResponse;
 import com.javaweb.repository.entity.BuildingEntity;
 import com.javaweb.repository.entity.RentAreaEntity;
 import com.javaweb.utils.FileUtil;
-import com.javaweb.utils.StringUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -25,8 +22,8 @@ public class BuildingConverter {
 
     public BuildingSearchResponse EntityToSearchResponse(BuildingEntity entity) {
         BuildingSearchResponse model = modelMapper.map(entity, BuildingSearchResponse.class);
-        model.setAddress(Stream.of(entity.getStreet(), entity.getWard(), StringUtil.checkString(entity.getDistrict()) ? District.valueOf(entity.getDistrict()).getName() : null)
-                .filter(StringUtil::checkString).collect(Collectors.joining(", ")));
+        model.setAddress(Stream.of(entity.getStreet(), entity.getWard(), StringUtils.hasText(entity.getDistrict()) ? District.valueOf(entity.getDistrict()).getName() : null)
+                .filter(StringUtils::hasText).collect(Collectors.joining(", ")));
         if(!entity.getRentAreas().isEmpty())
             model.setRentAreas(entity.getRentAreas().stream().map(i -> i.getValue().toString()).collect(Collectors.joining(", ")));
         else model.setRentAreas("");

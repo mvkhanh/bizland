@@ -1,10 +1,13 @@
 package com.javaweb.enums;
 
+import lombok.Getter;
+
 import java.util.Arrays;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
+@Getter
 public enum TypeCode {
     NOI_THAT("Nội thất"),
     NGUYEN_CAN("Nguyên căn"),
@@ -14,10 +17,6 @@ public enum TypeCode {
 
     TypeCode(String name){
         this.name = name;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public static Map<String, String> getTypecodes(){

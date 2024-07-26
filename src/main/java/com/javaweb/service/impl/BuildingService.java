@@ -4,29 +4,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.javaweb.enums.Role;
-import com.javaweb.model.request.BuildingAssignmentRequest;
+import com.javaweb.model.request.AssignmentRequest;
 import com.javaweb.model.request.BuildingSearchRequest;
 import com.javaweb.model.dto.BuildingDTO;
 import com.javaweb.model.response.BuildingSearchResponse;
 import com.javaweb.model.response.Response;
 import com.javaweb.model.response.StaffResponse;
+import com.javaweb.repository.IRepository;
 import com.javaweb.repository.IUserRepository;
 import com.javaweb.service.IBuildingService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.javaweb.converter.BuildingConverter;
-import com.javaweb.repository.IBuildingRepository;
 import com.javaweb.repository.entity.BuildingEntity;
 
 @Service
 public class BuildingService implements IBuildingService {
     @Autowired
-    private IBuildingRepository buildingRepository;
+    private IRepository<BuildingEntity, BuildingSearchRequest> buildingRepository;
 
     @Autowired
     private IUserRepository userRepository;
@@ -36,7 +36,7 @@ public class BuildingService implements IBuildingService {
 
     @Override
     public Page<BuildingSearchResponse> findAll(BuildingSearchRequest searchDTO) {
-        Page<BuildingEntity> results = buildingRepository.findAll(searchDTO, PageRequest.of(searchDTO.getPageNumber(), searchDTO.getPageSize()));
+        Page<BuildingEntity> results = buildingRepository.findAll(searchDTO, PageRequest.of(searchDTO.getPageNumber(), searchDTO.getPageSize()), BuildingEntity.class);
         List<BuildingSearchResponse> responses = results.getContent().stream().map(buildingConverter::EntityToSearchResponse).toList();
         return new PageImpl<>(responses, results.getPageable(), results.getTotalElements());
     }
@@ -49,12 +49,11 @@ public class BuildingService implements IBuildingService {
     @Override
     public void addOrUpdate(BuildingDTO dto) {
         BuildingEntity entity = buildingConverter.DTOToEntity(dto);
-        if(dto.getId() != null && dto.getImageFile() == null){
+        if(dto.getId() != null){
             BuildingEntity existBuilding = buildingRepository.findById(dto.getId()).get();
             if(dto.getImageFile() == null) entity.setImage(existBuilding.getImage());
             entity.setUsers(existBuilding.getUsers());
         }
-
         buildingRepository.save(entity);
     }
 
@@ -72,8 +71,8 @@ public class BuildingService implements IBuildingService {
     }
 
     @Override
-    public void assignBuilding(BuildingAssignmentRequest request) {
-        BuildingEntity building = buildingRepository.findById(request.getBuildingId()).get();
+    public void assignBuilding(AssignmentRequest request) {
+        BuildingEntity building = buildingRepository.findById(request.getId()).get();
         building.setUsers(userRepository.findAllById(request.getStaffIds()));
         buildingRepository.save(building);
     }

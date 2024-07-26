@@ -7,7 +7,6 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
-public interface BuildingRepositoryCustom {
-    /*Page<BuildingEntity> findAll(BuildingSearchRequest searchDTO, Pageable pageable);*/
-    Page<BuildingEntity> findAll(BuildingSearchRequest searchDTO, Pageable pageable);
+public interface RepositoryCustom <E, S>{
+    Page<E> findAll(S searchDTO, Pageable pageable, Class<E> entityClass);
 }

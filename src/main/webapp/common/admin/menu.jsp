@@ -1,11 +1,5 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: mvk
-  Date: 04/07/2024
-  Time: 08:17
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@include file="../../common/taglib.jsp"%>
 <div id="sidebar" class="sidebar                  responsive                    ace-save-state">
     <script type="text/javascript">
         try{ace.settings.loadState('sidebar')}catch(e){}
@@ -61,25 +55,27 @@
                 </li>
             </ul>
         </li>
-        <li>
-            <a href='#' class="dropdown-toggle">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
-                    <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
-                    <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
-                </svg>
-                <span class="menu-text"> Quản lý tài khoản </span>
-            </a>
-            <b class="arrow"></b>
-            <ul class="submenu">
-                <li class="">
-                    <a href="/admin/accounts">
-                        <i class="menu-icon fa fa-caret-right"></i>
-                        Danh sách tài khoản
-                    </a>
-                    <b class="arrow"></b>
-                </li>
-            </ul>
-        </li>
+        <c:if test="${fn:contains(sessionScope.user.roles, 'ADMIN')}">
+            <li>
+                <a href='#' class="dropdown-toggle">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+                        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+                        <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
+                    </svg>
+                    <span class="menu-text"> Quản lý tài khoản </span>
+                </a>
+                <b class="arrow"></b>
+                <ul class="submenu">
+                    <li class="">
+                        <a href="/admin/users">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            Danh sách tài khoản
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+                </ul>
+            </li>
+        </c:if>
         <li>
             <a href='#' class="dropdown-toggle">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-people-fill" viewBox="0 0 16 16">

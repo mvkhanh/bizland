@@ -1,5 +1,6 @@
 package com.javaweb.security;
 
+import com.javaweb.enums.Role;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -30,17 +31,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     }
 
     private String determineTargetUrl(Authentication authentication){
-        Map<String, String> roleTargetUrlMap = new HashMap<>();
-        roleTargetUrlMap.put("ROLE_USER", "/trang-chu");
-        roleTargetUrlMap.put("ROLE_ADMIN", "/admin/home");
-        roleTargetUrlMap.put("ROLE_STAFF", "/admin/home");
-        final Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-        for (final GrantedAuthority grantedAuthority : authorities) {
-            String authorityName = grantedAuthority.getAuthority();
-            if(roleTargetUrlMap.containsKey(authorityName)) {
-                return roleTargetUrlMap.get(authorityName);
-            }
-        }
-        throw new IllegalStateException();
+        if(authentication.getAuthorities().stream().anyMatch(i -> i.getAuthority().equals(Role.USER.name()))) return "/trang-chu";
+        return "/admin/home";
     }
 }

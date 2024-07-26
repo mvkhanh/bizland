@@ -2,11 +2,17 @@ package com.javaweb.repository.entity;
 
 import com.javaweb.enums.Role;
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -31,12 +37,19 @@ public class UserEntity extends BaseEntity implements UserDetails {
 
     private String email;
 
+//    @Column(name = "dateofbirth")
+//    private LocalDate dateOfBirth;
+
     private Integer status;
 
+    @NotEmpty(message = "Chưa chọn chức năng cho tài khoản")
     private String roles;
 
     @ManyToMany(mappedBy = "users")
     private List<BuildingEntity> buildings = new ArrayList<>();
+
+    @ManyToMany(mappedBy = "staffs")
+    private List<CustomerEntity> customers = new ArrayList<>();
 
     @Override
     public boolean isAccountNonExpired() {

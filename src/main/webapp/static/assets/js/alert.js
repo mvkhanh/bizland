@@ -16,6 +16,6 @@ function showErrorMessage(message) {
         title: 'Error!',
         text: message,
         icon: 'error',
-        confirmButtonText: 'OK'
+        confirmButtonText: 'OK',
     });
 }
