@@ -9,5 +9,5 @@ public class UserSearchRequest {
     private String fullName;
     private String phone;
     private String roles;
-    private Integer pageNumber = 0, pageSize = 2;
+    private Integer pageNumber = 0, pageSize = 2, status = 1;
 }

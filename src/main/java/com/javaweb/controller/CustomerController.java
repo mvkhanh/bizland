@@ -26,7 +26,7 @@ public class CustomerController {
 
     @GetMapping("/customers")
     public ModelAndView getList(@ModelAttribute("search") CustomerSearchRequest search){
-        ModelAndView mav = new ModelAndView("admin/customers/list");
+        ModelAndView mav = new ModelAndView("admin/customer/list");
         if(UserSecurityUtil.getRoles().contains(Role.STAFF.name())) search.setId_staff(UserSecurityUtil.getUserDetail().getId());
         mav.addObject("result", customerService.findAll(search));
         mav.addObject("staffs", userService.findAllStaff());

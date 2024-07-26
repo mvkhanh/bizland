@@ -86,5 +86,5 @@ public class BuildingEntity extends BaseEntity{
 
     @ManyToMany
     @JoinTable(name = "buildingassignment", joinColumns = @JoinColumn(name = "id_building"), inverseJoinColumns = @JoinColumn(name = "id_staff"))
-    private List<UserEntity> users = new ArrayList<>();
+    private List<UserEntity> staffs = new ArrayList<>();
 }

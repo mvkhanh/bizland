@@ -6,11 +6,11 @@ spring:
     password: Khanh181*
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     properties:
       hibernate:
         format_sql: true
-#        show_sql: true
+  #        show_sql: true
   servlet:
     multipart:
       max-file-size: 10MB

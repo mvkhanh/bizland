@@ -338,7 +338,7 @@
         $('#btn-assign-building').click(function(e){
             e.preventDefault();
             var data = {};
-            data['buildingId'] = $('#buildingId').val();
+            data['id'] = $('#buildingId').val();
             data['staffIds'] = $('#staffList').find('tbody input[type = checkbox]:checked').map(function () {
                 return $(this).val();
             }).get();

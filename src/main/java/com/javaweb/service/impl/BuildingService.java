@@ -10,11 +10,10 @@ import com.javaweb.model.dto.BuildingDTO;
 import com.javaweb.model.response.BuildingSearchResponse;
 import com.javaweb.model.response.Response;
 import com.javaweb.model.response.StaffResponse;
-import com.javaweb.repository.IRepository;
+import com.javaweb.repository.IBuildingRepository;
 import com.javaweb.repository.IUserRepository;
 import com.javaweb.service.IBuildingService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -26,7 +25,7 @@ import com.javaweb.repository.entity.BuildingEntity;
 @Service
 public class BuildingService implements IBuildingService {
     @Autowired
-    private IRepository<BuildingEntity, BuildingSearchRequest> buildingRepository;
+    private IBuildingRepository buildingRepository;
 
     @Autowired
     private IUserRepository userRepository;
@@ -52,7 +51,7 @@ public class BuildingService implements IBuildingService {
         if(dto.getId() != null){
             BuildingEntity existBuilding = buildingRepository.findById(dto.getId()).get();
             if(dto.getImageFile() == null) entity.setImage(existBuilding.getImage());
-            entity.setUsers(existBuilding.getUsers());
+            entity.setStaffs(existBuilding.getStaffs());
         }
         buildingRepository.save(entity);
     }
@@ -66,14 +65,14 @@ public class BuildingService implements IBuildingService {
     public Response getStaffs(Integer id) {
         List<StaffResponse> staffResponses = new ArrayList<>();
         userRepository.findAllByStatusAndRolesContaining(1, Role.STAFF.name()).forEach(
-                staff -> staffResponses.add(new StaffResponse(staff.getId(), staff.getFullName(), buildingRepository.findById(id).get().getUsers().contains(staff) ? "checked" : "")));
+                staff -> staffResponses.add(new StaffResponse(staff.getId(), staff.getFullName(), buildingRepository.findById(id).get().getStaffs().contains(staff) ? "checked" : "")));
         return new Response.RequestBuilder().data(staffResponses).build();
     }
 
     @Override
     public void assignBuilding(AssignmentRequest request) {
         BuildingEntity building = buildingRepository.findById(request.getId()).get();
-        building.setUsers(userRepository.findAllById(request.getStaffIds()));
+        building.setStaffs(userRepository.findAllById(request.getStaffIds()));
         buildingRepository.save(building);
     }
 }

@@ -29,18 +29,8 @@ public class UserService implements IUserService {
     @Override
     public Page<UserDTO> findAll(UserSearchRequest search) {
         Pageable pageable = PageRequest.of(search.getPageNumber(), search.getPageSize());
-        UserEntity userProbe = UserEntity.builder()
-                        .fullName(StringUtils.hasText(search.getFullName()) ? search.getFullName() : null)
-                        .roles(StringUtils.hasText(search.getRoles()) ? search.getRoles() : null)
-                        .phone(StringUtils.hasText(search.getPhone()) ? search.getPhone() : null)
-                        .status(1)
-                        .build();
-        ExampleMatcher matcher = ExampleMatcher.matchingAll()
-                        .withMatcher("fullName", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
-                        .withMatcher("roles", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
-                        .withMatcher("phone", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase());
-        Example<UserEntity> example = Example.of(userProbe, matcher);
-        return repository.findAll(example, pageable).map(i -> {
+        Page<UserEntity> results = repository.findAll(search, pageable, UserEntity.class);
+        return results.map(i -> {
             i.setRoles(Role.valueOf(i.getRoles()).getName());
             return converter.EntityToDTO(i);
         });
