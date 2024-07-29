@@ -18,5 +18,4 @@ public class BuildingSearchResponse {
     private Double serviceFee;
     private Double brokerageFee;
     private String rentAreas;
-
 }

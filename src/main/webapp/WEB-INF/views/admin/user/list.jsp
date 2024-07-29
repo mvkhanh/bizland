@@ -45,16 +45,14 @@
                         <div class="widget-main">
                             <form:form id="listForm" action="${usersUrl}" method="get" modelAttribute="search">
                                 <div class="row">
-                                    <div class="col-xs-6">
+                                    <div class="col-xs-5">
                                         <label>Tên người dùng</label>
                                         <form:input class="form-control" placeholder="Nhập tên người dùng" path="fullName" id="fullName"/>
                                     </div>
-                                    <div class="col-xs-6">
+                                    <div class="col-xs-4">
                                         <label>Số điện thoại</label>
                                         <form:input class="form-control" placeholder="Nhập số điện thoại" path="phone"/>
                                     </div>
-                                </div>
-                                <div class="row">
                                     <div class="col-xs-2">
                                         <label>Vai trò</label>
                                         <form:select class="form-control" path="roles">
@@ -65,7 +63,7 @@
                                 </div>
                                 <form:hidden path="pageNumber" id="pageNumber"/>
                                 <form:hidden path="pageSize" id="pageSize"/>
-                                <div class="row">
+                                <div class="row" style="margin-top: 1em">
                                     <div class="pull-left">
                                         <button type="button" class="btn btn-danger btn-xs" style="font-size: 16px; margin-left: 10px" id="btn-clear">Xoá tất cả</button>
                                     </div>

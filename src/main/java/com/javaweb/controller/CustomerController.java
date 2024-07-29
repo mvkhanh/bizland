@@ -1,14 +1,11 @@
 package com.javaweb.controller;
 
 import com.javaweb.enums.Role;
-import com.javaweb.model.dto.BuildingDTO;
-import com.javaweb.model.request.BuildingSearchRequest;
+import com.javaweb.model.dto.CustomerDTO;
 import com.javaweb.model.request.CustomerSearchRequest;
 import com.javaweb.security.utils.UserSecurityUtil;
 import com.javaweb.service.ICustomerService;
 import com.javaweb.service.IUserService;
-import com.javaweb.utils.FileUtil;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,15 +31,12 @@ public class CustomerController {
     }
 
     @GetMapping("/customers-edit")
-    public ModelAndView add(@ModelAttribute("customer") BuildingDTO dto, HttpServletRequest request){
-        return new ModelAndView("admin/customer/edit", "staffs", userService.findAllStaff());
+    public ModelAndView add(@ModelAttribute("customer") CustomerDTO dto){
+        return new ModelAndView("admin/customer/edit");
     }
 
     @GetMapping("/customers-edit-{id}")
-    public ModelAndView edit(@PathVariable Integer id, HttpServletRequest request){
-        ModelAndView mav = new ModelAndView("admin/customer/edit");
-        mav.addObject("customer", customerService.findById(id));
-        mav.addObject("staffs", userService.findAllStaff());
-        return mav;
+    public ModelAndView edit(@PathVariable Integer id){
+        return new ModelAndView("admin/customer/edit", "customer", customerService.findById(id));
     }
 }

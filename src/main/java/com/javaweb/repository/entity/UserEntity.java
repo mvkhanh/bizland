@@ -40,12 +40,10 @@ public class UserEntity extends BaseEntity implements UserDetails {
 //    @Column(name = "dateofbirth")
 //    private LocalDate dateOfBirth;
 
-    private Integer status;
-
     @NotEmpty(message = "Chưa chọn chức năng cho tài khoản")
     private String roles;
 
-    @ManyToMany(mappedBy = "users")
+    @ManyToMany(mappedBy = "staffs")
     private List<BuildingEntity> buildings = new ArrayList<>();
 
     @ManyToMany(mappedBy = "staffs")

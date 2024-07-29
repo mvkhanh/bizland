@@ -2,12 +2,14 @@ package com.javaweb.repository.custom.impl;
 
 import com.javaweb.repository.custom.RepositoryCustom;
 import com.javaweb.utils.NumberUtil;
+import com.javaweb.utils.ReflectionUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 import java.lang.reflect.Field;
@@ -28,7 +30,16 @@ public class RepositoryCustomImpl <E, S> implements RepositoryCustom<E, S> {
     @Override
     public Page<E> findAll(S searchDTO, Pageable pageable, Class<E> entityClass) {
         table = getEntityName(searchDTO);
-        String baseQuery = " FROM " + table + " b " + getQuery(searchDTO);
+        StringBuilder baseQuery = new StringBuilder(" FROM " + table + " b " + getQuery(searchDTO));
+        Sort sort = pageable.getSort();
+        if(sort.isSorted()){
+            baseQuery.append(" ORDER BY ");
+            for (Sort.Order order : sort) {
+                String columnName = order.getProperty();
+                Sort.Direction direction = order.getDirection();
+                baseQuery.append(columnName + " " + direction + " ");
+            }
+        }
         Query query = entityManager.createNativeQuery("SELECT DISTINCT * " + baseQuery, entityClass);
         Query countQuery = entityManager.createNativeQuery("SELECT COUNT(DISTINCT b.id) " + baseQuery);
         query.setFirstResult((int) pageable.getOffset());
@@ -39,13 +50,14 @@ public class RepositoryCustomImpl <E, S> implements RepositoryCustom<E, S> {
     private StringBuilder getQuery(S searchDTO) {
         StringBuilder query = new StringBuilder(" WHERE 1 = 1 ");
         try {
-            for(Field field : searchDTO.getClass().getDeclaredFields()) {
+            for(Field field : ReflectionUtil.getAllFields(searchDTO.getClass())) {
                 field.setAccessible(true);
                 Object value = field.get(searchDTO);
-                if(value == null || !StringUtils.hasText(value.toString()) || field.getName().equals("pageNumber") || field.getName().equals("pageSize")) continue;
-                if(!field.getName().equals("id_staff") && !field.getName().equals("typeCodes") && !field.getName().startsWith("area") && !field.getName().startsWith("rentPrice")) {
-                    if(!field.getName().toLowerCase().contains("phone") && NumberUtil.checkNumber(value.toString())) query.append(" AND b.").append(field.getName()).append(" = ").append(value);
-                    else query.append(" AND b.").append(field.getName()).append(" LIKE '%").append(value).append("%'");
+                String fieldName = field.getName();
+                if(value == null || !StringUtils.hasText(value.toString()) || fieldName.equals("pageNumber") || fieldName.equals("pageSize") || fieldName.equals("sortColumn") || fieldName.equals("sortDirection")) continue;
+                if(!fieldName.equals("id_staff") && !fieldName.equals("typeCodes") && !fieldName.startsWith("area") && !fieldName.startsWith("rentPrice")) {
+                    if(!fieldName.toLowerCase().contains("phone") && NumberUtil.checkNumber(value.toString()) || fieldName.equals("deleted")) query.append(" AND b.").append(fieldName).append(" = ").append(value);
+                    else query.append(" AND b.").append(fieldName).append(" LIKE '%").append(value).append("%'");
                 }
                 else query.append(specialQuery(field, searchDTO));
             }

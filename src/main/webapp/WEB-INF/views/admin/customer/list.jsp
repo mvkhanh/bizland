@@ -55,11 +55,11 @@
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-xs-5">
+                                        <div class="col-xs-6">
                                             <label>Email</label>
                                             <form:input class="form-control" placeholder="Nhập email" path="email"/>
                                         </div>
-                                        <div class="col-xs-5">
+                                        <div class="col-xs-6">
                                             <label>Tình trạng</label>
                                             <form:input class="form-control" placeholder="Nhập tình trạng" path="status"/>
                                         </div>
@@ -77,7 +77,7 @@
                                     </div>
                                     <form:hidden path="pageNumber" id="pageNumber"/>
                                     <form:hidden path="pageSize" id="pageSize"/>
-                                    <div class="row">
+                                    <div class="row" style="margin-top: 1em">
                                         <div class="pull-left">
                                             <button type="button" class="btn btn-danger btn-xs" style="font-size: 16px; margin-left: 10px" id="btn-clear">Xoá tất cả</button>
                                         </div>
@@ -150,7 +150,6 @@
                                         <span class="lbl"></span>
                                     </label>
                                 </td>
-
                                 <td>${customer.name}</td>
                                 <td>${customer.phone}</td>
                                 <td>${customer.email}</td>

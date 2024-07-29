@@ -129,6 +129,8 @@
                                     </div>
                                     <form:hidden path="pageNumber" id="pageNumber"/>
                                     <form:hidden path="pageSize" id="pageSize"/>
+                                    <form:hidden path="sortColumn" id="sortColumn"/>
+                                    <form:hidden path="sortDirection" id="sortDirection"/>
                                     <div class="row">
                                         <div class="pull-left">
                                             <button type="button" class="btn btn-danger btn-xs" style="font-size: 16px; margin-left: 10px" id="btn-clear">Xoá tất cả</button>
@@ -174,26 +176,53 @@
                 <div class="col-xs-12">
                     <table id="table" class="table table-bordered table-hover">
                         <thead>
-                        <tr>
-                            <th class="center">
-                                <label class="pos-rel">
-                                    <input type="checkbox" class="ace" name="checkList" id="checkAll">
-                                    <span class="lbl"></span>
-                                </label>
-                            </th>
-                            <th>Tên toà nhà</th>
-                            <th>Địa chỉ</th>
-                            <th>Số tầng hầm</th>
-                            <th>Tên quản lý</th>
-                            <th>Số điện thoại</th>
-                            <th>Diện tích sàn</th>
-                            <th>Diện tích trống</th>
-                            <th>Diện tích thuê</th>
-                            <th>Giá thuê</th>
-                            <th>Phí dịch vụ</th>
-                            <th>Phí môi giới</th>
-                            <th>Thao tác</th>
-                        </tr>
+                            <tr>
+                                <th class="center">
+                                    <label class="pos-rel">
+                                        <input type="checkbox" class="ace" name="checkList" id="checkAll">
+                                        <span class="lbl"></span>
+                                    </label>
+                                </th>
+                                <th class="${search.sortColumn == 'name' ? 'sorted' : ''}">
+                                    Tên toà nhà
+                                    <i class="sort-icon fa ${search.sortColumn == 'name' ? (search.sortDirection == 'asc' ? 'fa-sort-asc' : 'fa-sort-desc') : 'fa-sort'}" onclick="sortTable('name')"></i>
+                                </th>
+                                <th>Địa chỉ</th>
+                                <th class="${search.sortColumn == 'numberOfBasements' ? 'sorted' : ''}">
+                                    Số tầng hầm
+                                    <i class="sort-icon fa ${search.sortColumn == 'numberOfBasements' ? (search.sortDirection == 'asc' ? 'fa-sort-asc' : 'fa-sort-desc') : 'fa-sort'}" onclick="sortTable('numberOfBasements')"></i>
+                                </th>
+                                <th class="${search.sortColumn == 'managerName' ? 'sorted' : ''}">
+                                    Tên quản lý
+                                    <i class="sort-icon fa ${search.sortColumn == 'managerName' ? (search.sortDirection == 'asc' ? 'fa-sort-asc' : 'fa-sort-desc') : 'fa-sort'}" onclick="sortTable('managerName')"></i>
+                                </th>
+                                <th class="${search.sortColumn == 'managerPhone' ? 'sorted' : ''}">
+                                    Số điện thoại
+                                    <i class="sort-icon fa ${search.sortColumn == 'managerPhone' ? (search.sortDirection == 'asc' ? 'fa-sort-asc' : 'fa-sort-desc') : 'fa-sort'}" onclick="sortTable('managerPhone')"></i>
+                                </th>
+                                <th class="${search.sortColumn == 'floorArea' ? 'sorted' : ''}">
+                                    Diện tích sàn
+                                    <i class="sort-icon fa ${search.sortColumn == 'floorArea' ? (search.sortDirection == 'asc' ? 'fa-sort-asc' : 'fa-sort-desc') : 'fa-sort'}" onclick="sortTable('floorArea')"></i>
+                                </th>
+                                <th class="${search.sortColumn == 'leftArea' ? 'sorted' : ''}">
+                                    Diện tích trống
+                                    <i class="sort-icon fa ${search.sortColumn == 'leftArea' ? (search.sortDirection == 'asc' ? 'fa-sort-asc' : 'fa-sort-desc') : 'fa-sort'}" onclick="sortTable('leftArea')"></i>
+                                </th>
+                                <th>Diện tích thuê</th>
+                                <th class="${search.sortColumn == 'rentPrice' ? 'sorted' : ''}">
+                                    Giá thuê
+                                    <i class="sort-icon fa ${search.sortColumn == 'rentPrice' ? (search.sortDirection == 'asc' ? 'fa-sort-asc' : 'fa-sort-desc') : 'fa-sort'}" onclick="sortTable('rentPrice')"></i>
+                                </th>
+                                <th class="${search.sortColumn == 'serviceFee' ? 'sorted' : ''}">
+                                    Phí dịch vụ
+                                    <i class="sort-icon fa ${search.sortColumn == 'serviceFee' ? (search.sortDirection == 'asc' ? 'fa-sort-asc' : 'fa-sort-desc') : 'fa-sort'}" onclick="sortTable('serviceFee')"></i>
+                                </th>
+                                <th class="${search.sortColumn == 'brokerageFee' ? 'sorted' : ''}">
+                                    Phí môi giới
+                                    <i class="sort-icon fa ${search.sortColumn == 'brokerageFee' ? (search.sortDirection == 'asc' ? 'fa-sort-asc' : 'fa-sort-desc') : 'fa-sort'}" onclick="sortTable('brokerageFee')"></i>
+                                </th>
+                                <th>Thao tác</th>
+                            </tr>
                         </thead>
 
                         <tbody>
@@ -205,7 +234,6 @@
                                         <span class="lbl"></span>
                                     </label>
                                 </td>
-
                                 <td>${building.name}</td>
                                 <td>${building.address}</td>
                                 <td>${building.numberOfBasements}</td>
@@ -291,7 +319,8 @@
             </div>
         </div>
     </div>
-
+<script>
+    </script>
 
     <script>
         function assignBuidling(buildingId){
@@ -403,7 +432,24 @@
         $('#btn-clear').click(function (){
             $('#listForm').find('input[type="text"], input[type="number"], input[type="email"], select, textarea').val('');
             $('#listForm').find('input[type="checkbox"]').prop('checked', false);
-        })
+        });
+        function sortTable(column) {
+            var currentColumn = $('#sortColumn').val();
+            var currentDirection = $('#sortDirection').val();
+            var newDirection = 'asc';
+
+            if (currentColumn === column) {
+                newDirection = currentDirection === 'asc' ? 'desc' : 'asc';
+            }
+
+            $('#sortColumn').val(column);
+            $('#sortDirection').val(newDirection);
+
+            $('#listForm').submit();
+        }
+
+
+
     </script>
 </body>
 </html>

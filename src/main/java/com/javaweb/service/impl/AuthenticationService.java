@@ -19,14 +19,13 @@ public class AuthenticationService implements IAuthenticationService {
     @Override
     public UserEntity createUser(RegisterRequest registerRequest) {
         String username = registerRequest.getUsername();
-        if(repository.existsByUsername(username)) throw new DataIntegrityViolationException("Username already exists");
+        if(repository.existsByUsernameAndDeleted(username, false)) throw new DataIntegrityViolationException("Username already exists");
         UserEntity entity = UserEntity.builder()
                 .email(registerRequest.getEmail())
                 .phone(registerRequest.getPhone())
                 .roles(Role.USER.name())
                 .username(username)
                 .fullName(registerRequest.getFullName())
-                .status(1)
                 .password(passwordEncoder.encode(registerRequest.getPassword()))
                 .build();
         return repository.save(entity);

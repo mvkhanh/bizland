@@ -13,6 +13,7 @@ public class HomeController {
     public ModelAndView admin(HttpServletRequest request){
         return new ModelAndView("admin/home");
     }
+
     @GetMapping("/login")
     public ModelAndView login(HttpServletRequest request){
         return new ModelAndView("login");

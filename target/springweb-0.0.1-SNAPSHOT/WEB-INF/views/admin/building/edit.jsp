@@ -149,9 +149,10 @@
                         </div>
                         <div class="row">
                             <label class="col-xs-3">Hình đại diện</label>
-                            <form:input path="imageFile" class="col-xs-7" id="avatarInput" type="file" onchange="previewImage(this);" accept="image/*"/>
+                            <form:input path="imageFile" class="col-xs-2" id="avatarInput" type="file" onchange="previewImage(this);" accept="image/*"/>
+                            <button type="button" class="btn btn-xs btn-danger" onclick="clearImage()">Xóa ảnh</button>
                         </div>
-                        <div class="row" style="margin-bottom: 1em;">
+                        <div class="row" style="margin-bottom: 1em; margin-top: 1em">
                             <div class="col-xs-3"></div>
                             <img id="avatarPreview" alt="Chưa chọn hình đại diện" width="300px" height="200px" src="data:image/jpeg;base64,${image}">
                         </div>
@@ -216,6 +217,10 @@
             } else {
                 preview.src = "";
             }
+        }
+        function clearImage() {
+            document.getElementById('avatarInput').value = "";
+            document.getElementById('avatarPreview').src = "";
         }
     </script>
 

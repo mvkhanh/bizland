@@ -16,8 +16,8 @@ public class BuildingAPI {
     private final IBuildingService service;
 
     @PostMapping
-    public void addOrUpdate(@ModelAttribute BuildingDTO dto){
-        service.addOrUpdate(dto);
+    public void addOrUpdate(@ModelAttribute BuildingDTO building){
+        service.addOrUpdate(building);
     }
 
     @DeleteMapping("/{ids}")

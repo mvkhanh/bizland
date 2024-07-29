@@ -2,21 +2,27 @@ package com.javaweb.service.impl;
 
 import com.javaweb.converter.CustomerConverter;
 import com.javaweb.enums.Role;
+import com.javaweb.enums.TransactionType;
 import com.javaweb.model.dto.CustomerDTO;
 import com.javaweb.model.request.AssignmentRequest;
 import com.javaweb.model.request.CustomerSearchRequest;
 import com.javaweb.model.response.Response;
 import com.javaweb.model.response.StaffResponse;
 import com.javaweb.repository.ICustomerRepository;
+import com.javaweb.repository.ITransactionRepository;
 import com.javaweb.repository.IUserRepository;
 import com.javaweb.repository.entity.CustomerEntity;
+import com.javaweb.repository.entity.TransactionEntity;
 import com.javaweb.service.ICustomerService;
+import com.javaweb.service.ITransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -24,6 +30,7 @@ import java.util.List;
 public class CustomerService implements ICustomerService {
     private final ICustomerRepository customerRepository;
     private final IUserRepository userRepository;
+    private final ITransactionService transactionService;
     private final CustomerConverter converter;
 
     @Override
@@ -34,7 +41,9 @@ public class CustomerService implements ICustomerService {
 
     @Override
     public CustomerDTO findById(Integer id) {
-        return converter.EntityToDTO(customerRepository.findById(id).get());
+        CustomerDTO dto = converter.EntityToDTO(customerRepository.findById(id).get());
+        Arrays.stream(TransactionType.values()).forEach(i -> dto.getTransactions().put(Pair.of(i.name(), i.getName()), transactionService.find(id, i.name())));
+        return dto;
     }
 
     @Override
@@ -49,13 +58,16 @@ public class CustomerService implements ICustomerService {
 
     @Override
     public void delete(List<Integer> ids) {
-        customerRepository.findAllById(ids).forEach(entity -> entity.setStatus("Đã xoá"));
+        customerRepository.findAllById(ids).forEach(customer -> {
+            customer.setDeleted(true);
+            customerRepository.save(customer);
+        });
     }
 
     @Override
     public Response getStaffs(Integer id) {
         List<StaffResponse> staffResponses = new ArrayList<>();
-        userRepository.findAllByStatusAndRolesContaining(1, Role.STAFF.name()).forEach(
+        userRepository.findAllByDeletedAndRolesContaining(false, Role.STAFF.name()).forEach(
                 staff -> staffResponses.add(new StaffResponse(staff.getId(), staff.getFullName(), customerRepository.findById(id).get().getStaffs().contains(staff) ? "checked" : "")));
         return new Response.RequestBuilder().data(staffResponses).build();
     }

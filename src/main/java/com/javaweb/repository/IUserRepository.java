@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface IUserRepository extends JpaRepository<UserEntity, Integer>, RepositoryCustom<UserEntity, UserSearchRequest> {
-    List<UserEntity> findAllByStatusAndRolesContaining(Integer status, String role);
-    UserEntity findByUsernameAndStatus(String username, Integer status);
-    boolean existsByUsername(String username);
+    List<UserEntity> findAllByDeletedAndRolesContaining(Boolean deleted, String role);
+    UserEntity findByUsernameAndDeleted(String username, Boolean deleted);
+    boolean existsByUsernameAndDeleted(String username, Boolean deleted);
 }

@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.sql.Date;
+import java.time.LocalDate;
 
 @Setter
 @Getter
@@ -16,14 +17,16 @@ public abstract class BaseEntity {
     private Integer id;
 
     @Column(name = "createddate")
-    private Date createdDate;
+    private LocalDate createdDate;
 
     @Column(name = "modifieddate")
-    private Date modifiedDate;
+    private LocalDate modifiedDate;
 
     @Column(name = "createdby")
     private String createdBy;
 
     @Column(name = "modifiedby")
     private String modifiedBy;
+
+    private Boolean deleted = false;
 }

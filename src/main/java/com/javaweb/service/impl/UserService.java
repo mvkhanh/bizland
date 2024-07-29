@@ -38,7 +38,7 @@ public class UserService implements IUserService {
 
     @Override
     public Map<Integer, String> findAllStaff() {
-        return repository.findAllByStatusAndRolesContaining(1, Role.STAFF.name()).stream()
+        return repository.findAllByDeletedAndRolesContaining(false, Role.STAFF.name()).stream()
             .collect(Collectors.toMap(
                     UserEntity::getId,
                     UserEntity::getFullName
@@ -69,7 +69,7 @@ public class UserService implements IUserService {
     @Override
     public void delete(List<Integer> ids) {
         repository.findAllById(ids).forEach(user -> {
-            user.setStatus(0);
+            user.setDeleted(true);
             repository.save(user);
         });
     }

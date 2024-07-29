@@ -30,8 +30,8 @@ public class SecurityConfiguration {
 
         return httpSecurity.csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(registry -> {
                 registry.requestMatchers("/register", "/static/**", "/WEB-INF/views/login.jsp").permitAll();
-                registry.requestMatchers(HttpMethod.GET, "/admin/buildings", "/admin/buildings-edit-{id}", "/admin/home").hasAnyRole(Role.STAFF.name(), Role.ADMIN.name());
-                registry.requestMatchers(HttpMethod.POST, "/admin/buildings").hasAnyRole(Role.STAFF.name(), Role.ADMIN.name());
+                registry.requestMatchers(HttpMethod.GET, "/admin/buildings", "/admin/buildings-edit-{id}", "/admin/home", "/admin/customers", "/admin/customers-edit-{id}").hasAnyRole(Role.STAFF.name(), Role.ADMIN.name());
+                registry.requestMatchers(HttpMethod.POST, "/admin/buildings", "/admin/customers", "/admin/transactions").hasAnyRole(Role.STAFF.name(), Role.ADMIN.name());
                 registry.requestMatchers("/admin/**").hasRole(Role.ADMIN.name());
                 registry.anyRequest().authenticated();
             })

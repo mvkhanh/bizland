@@ -14,9 +14,7 @@ import com.javaweb.repository.IBuildingRepository;
 import com.javaweb.repository.IUserRepository;
 import com.javaweb.service.IBuildingService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import com.javaweb.converter.BuildingConverter;
@@ -35,7 +33,9 @@ public class BuildingService implements IBuildingService {
 
     @Override
     public Page<BuildingSearchResponse> findAll(BuildingSearchRequest searchDTO) {
-        Page<BuildingEntity> results = buildingRepository.findAll(searchDTO, PageRequest.of(searchDTO.getPageNumber(), searchDTO.getPageSize()), BuildingEntity.class);
+        Sort sort = Sort.by(Sort.Direction.fromString(searchDTO.getSortDirection()), searchDTO.getSortColumn());
+        Pageable pageable = PageRequest.of(searchDTO.getPageNumber(), searchDTO.getPageSize(), sort);
+        Page<BuildingEntity> results = buildingRepository.findAll(searchDTO, pageable, BuildingEntity.class);
         List<BuildingSearchResponse> responses = results.getContent().stream().map(buildingConverter::EntityToSearchResponse).toList();
         return new PageImpl<>(responses, results.getPageable(), results.getTotalElements());
     }
@@ -58,13 +58,16 @@ public class BuildingService implements IBuildingService {
 
     @Override
     public void delete(List<Integer> ids) {
-        buildingRepository.deleteAllById(ids);
+        buildingRepository.findAllById(ids).forEach(i -> {
+            i.setDeleted(true);
+            buildingRepository.save(i);
+        });
     }
 
     @Override
     public Response getStaffs(Integer id) {
         List<StaffResponse> staffResponses = new ArrayList<>();
-        userRepository.findAllByStatusAndRolesContaining(1, Role.STAFF.name()).forEach(
+        userRepository.findAllByDeletedAndRolesContaining(false, Role.STAFF.name()).forEach(
                 staff -> staffResponses.add(new StaffResponse(staff.getId(), staff.getFullName(), buildingRepository.findById(id).get().getStaffs().contains(staff) ? "checked" : "")));
         return new Response.RequestBuilder().data(staffResponses).build();
     }

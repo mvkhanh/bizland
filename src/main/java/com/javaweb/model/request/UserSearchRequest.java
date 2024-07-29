@@ -5,9 +5,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class UserSearchRequest {
+public class UserSearchRequest extends BaseSearchRequest{
     private String fullName;
     private String phone;
     private String roles;
-    private Integer pageNumber = 0, pageSize = 2, status = 1;
 }
