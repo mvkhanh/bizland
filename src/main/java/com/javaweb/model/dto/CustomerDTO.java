@@ -1,5 +1,6 @@
 package com.javaweb.model.dto;
 
+import com.javaweb.enums.CustomerStatus;
 import com.javaweb.repository.entity.TransactionEntity;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,6 +18,7 @@ public class CustomerDTO extends AbstractDTO{
     private String phone;
     private String email;
     private String need;
-    private String status;
+    private String note;
+    private String status = CustomerStatus.CHUA_XU_LY.name();
     private Map<Pair<String, String>, List<TransactionEntity>> transactions = new HashMap<>();
 }

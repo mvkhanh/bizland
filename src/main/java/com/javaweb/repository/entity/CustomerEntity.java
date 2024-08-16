@@ -21,6 +21,8 @@ public class CustomerEntity extends BaseEntity {
 
     private String need;
 
+    private String note;
+
     private String status;
 
     @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)

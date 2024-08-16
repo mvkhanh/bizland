@@ -31,7 +31,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     }
 
     private String determineTargetUrl(Authentication authentication){
-        if(authentication.getAuthorities().stream().anyMatch(i -> i.getAuthority().equals(Role.USER.name()))) return "/trang-chu";
+        if(authentication.getAuthorities().stream().anyMatch(i -> i.getAuthority().equals("ROLE_" + Role.USER.name()))) return "/";
         return "/admin/home";
     }
 }

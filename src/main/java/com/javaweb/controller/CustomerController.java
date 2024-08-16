@@ -1,5 +1,6 @@
 package com.javaweb.controller;
 
+import com.javaweb.enums.CustomerStatus;
 import com.javaweb.enums.Role;
 import com.javaweb.model.dto.CustomerDTO;
 import com.javaweb.model.request.CustomerSearchRequest;
@@ -27,16 +28,20 @@ public class CustomerController {
         if(UserSecurityUtil.getRoles().contains(Role.STAFF.name())) search.setId_staff(UserSecurityUtil.getUserDetail().getId());
         mav.addObject("result", customerService.findAll(search));
         mav.addObject("staffs", userService.findAllStaff());
+        mav.addObject("customerStatus", CustomerStatus.getCustomerStatuses());
         return mav;
     }
 
     @GetMapping("/customers-edit")
     public ModelAndView add(@ModelAttribute("customer") CustomerDTO dto){
-        return new ModelAndView("admin/customer/edit");
+        return new ModelAndView("admin/customer/edit", "customerStatus", CustomerStatus.getCustomerStatuses());
     }
 
     @GetMapping("/customers-edit-{id}")
     public ModelAndView edit(@PathVariable Integer id){
-        return new ModelAndView("admin/customer/edit", "customer", customerService.findById(id));
+        ModelAndView mav = new ModelAndView("admin/customer/edit");
+        mav.addObject("customer", customerService.findById(id));
+        mav.addObject("customerStatus", CustomerStatus.getCustomerStatuses());
+        return mav;
     }
 }

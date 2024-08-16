@@ -56,8 +56,15 @@
                             <form:input class="col-xs-7" placeholder="Nhập nhu cầu" path="need"/>
                         </div>
                         <div class="row" style="margin-bottom: 1em;">
-                            <label class="col-xs-3">Tình trạng</label>
-                            <form:input class="col-xs-7" placeholder="Nhập tình trạng" path="status"/>
+                            <label class="col-xs-3" for="note-field">Ghi chú</label>
+                            <form:input class="col-xs-7" placeholder="Nhập ghi chú" path="note" id="note-field"/>
+                        </div>
+                        <div class="row" style="margin-bottom: 1em;">
+                            <label class="col-xs-3" for="status-field">Tình trạng</label>
+                            <form:select path="status" class="col-xs-2" id="status-field">
+                                <form:option value="">--Chọn tình trạng--</form:option>
+                                <form:options items="${customerStatus}"/>
+                            </form:select>
                         </div>
                         <div class="row center">
                             <button type="button" class="btn btn-xs btn-success" style="font-size: 16px; margin-right: 1em;" id="btn-submit">
@@ -234,7 +241,7 @@
         function addOrEditTransaction(id, detail, code){
             let data = {};
             data['code'] = code;
-            data['customerId'] = ${id};
+            data['customerId'] = '${id}';
             data['id'] = id;
             data['detail'] = detail;
             Swal.fire({

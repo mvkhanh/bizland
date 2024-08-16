@@ -1,4 +1,3 @@
-<!-- /WEB-INF/decorators/decorator.jsp -->
 <%@include file="../../common/taglib.jsp"%>
 <!DOCTYPE html>
 <html>

@@ -1,3 +1,5 @@
 <sitemesh>
     <mapping path="/admin/*" decorator="admin.jsp"/>
+<!--    <mapping path="/web/*" decorator="web.jsp"/>-->
+<!--    <mapping path="/" decorator="web.jsp"/>-->
 </sitemesh>

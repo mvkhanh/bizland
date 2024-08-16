@@ -59,13 +59,14 @@
                                             <label>Email</label>
                                             <form:input class="form-control" placeholder="Nhập email" path="email"/>
                                         </div>
-                                        <div class="col-xs-6">
-                                            <label>Tình trạng</label>
-                                            <form:input class="form-control" placeholder="Nhập tình trạng" path="status"/>
+                                        <div class="col-xs-3">
+                                            <label for="status-field">Tình trạng</label>
+                                            <form:select class="form-control" path="status" id="status-field">
+                                                <form:option value="">--Chọn tình trạng--</form:option>
+                                                <form:options items="${customerStatus}"/>
+                                            </form:select>
                                         </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-xs-2">
+                                        <div class="col-xs-3">
                                             <c:if test="${fn:contains(sessionScope.user.roles, 'ADMIN')}">
                                                 <label>Nhân viên phụ trách</label>
                                                 <form:select class="form-control" path="id_staff">
@@ -75,6 +76,7 @@
                                             </c:if>
                                         </div>
                                     </div>
+
                                     <form:hidden path="pageNumber" id="pageNumber"/>
                                     <form:hidden path="pageSize" id="pageSize"/>
                                     <div class="row" style="margin-top: 1em">

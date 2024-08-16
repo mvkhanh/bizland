@@ -2,10 +2,12 @@ package com.javaweb.enums;
 
 //import lombok.Getter;
 
+import lombok.Getter;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
-//@Getter
+@Getter
 public enum District {
     QUAN_1("Quận 1"),
     QUAN_2("Quận 2"),
@@ -27,9 +29,4 @@ public enum District {
                 TreeMap::new
         ));
     }
-
-    public String getName() {
-        return this.name;
-    }
-
 }

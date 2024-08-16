@@ -30,16 +30,10 @@ public class TransactionService implements ITransactionService {
     public void addOrUpdate(TransactionDTO dto) {
         TransactionEntity entity = converter.DTOToEntity(dto);
         entity.setCustomer(customerRepository.findById(dto.getCustomerId()).get());
-        if(dto.getId() == null){
-            entity.setCreatedBy(UserSecurityUtil.getUserDetail().getFullName());
-            entity.setCreatedDate(LocalDate.now());
-        }
-        else{
+        if(dto.getId() != null){
             TransactionEntity existEntity = repository.findById(dto.getId()).get();
             entity.setCreatedBy(existEntity.getCreatedBy());
             entity.setCreatedDate(existEntity.getCreatedDate());
-            entity.setModifiedBy(UserSecurityUtil.getUserDetail().getFullName());
-            entity.setModifiedDate(LocalDate.now());
         }
         repository.save(entity);
     }

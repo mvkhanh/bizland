@@ -18,9 +18,4 @@ public class HomeController {
     public ModelAndView login(HttpServletRequest request){
         return new ModelAndView("login");
     }
-
-    @GetMapping("/trang-chu")
-    public ModelAndView user(HttpServletRequest request){
-        return new ModelAndView("web/home");
-    }
 }

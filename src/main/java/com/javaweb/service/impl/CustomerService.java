@@ -6,13 +6,12 @@ import com.javaweb.enums.TransactionType;
 import com.javaweb.model.dto.CustomerDTO;
 import com.javaweb.model.request.AssignmentRequest;
 import com.javaweb.model.request.CustomerSearchRequest;
+import com.javaweb.model.response.CustomerSearchResponse;
 import com.javaweb.model.response.Response;
 import com.javaweb.model.response.StaffResponse;
 import com.javaweb.repository.ICustomerRepository;
-import com.javaweb.repository.ITransactionRepository;
 import com.javaweb.repository.IUserRepository;
 import com.javaweb.repository.entity.CustomerEntity;
-import com.javaweb.repository.entity.TransactionEntity;
 import com.javaweb.service.ICustomerService;
 import com.javaweb.service.ITransactionService;
 import lombok.RequiredArgsConstructor;
@@ -34,9 +33,9 @@ public class CustomerService implements ICustomerService {
     private final CustomerConverter converter;
 
     @Override
-    public Page<CustomerDTO> findAll(CustomerSearchRequest search) {
+    public Page<CustomerSearchResponse> findAll(CustomerSearchRequest search) {
         Page<CustomerEntity> results = customerRepository.findAll(search, PageRequest.of(search.getPageNumber(), search.getPageSize()), CustomerEntity.class);
-        return results.map(converter::EntityToDTO);
+        return results.map(converter::EntityToSearchResponse);
     }
 
     @Override
