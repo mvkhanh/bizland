@@ -34,7 +34,7 @@ To get started with the Real Estate Brokerage Management System:
 1. **Clone the Repository:**
 
    ```bash
-   git clone [[repository-url]](https://github.com/mvkhanh/bizland.git)
+   git clone https://github.com/mvkhanh/bizland.git
 
 2. **Install Dependencies:**
 Navigate to the project directory and install the necessary dependencies.
